@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.oa.jk.dao.HtDailyMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.oa.jk.model.HtDaily" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="daily_date" property="dailyDate" jdbcType="TIMESTAMP" />
+    <result column="plan_content" property="planContent" jdbcType="VARCHAR" />
+    <result column="complete_content" property="completeContent" jdbcType="VARCHAR" />
+    <result column="is_complete" property="isComplete" jdbcType="INTEGER" />
+    <result column="problem" property="problem" jdbcType="VARCHAR" />
+    <result column="insert_time" property="insertTime" jdbcType="TIMESTAMP" />
+    <result column="last_time" property="lastTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, daily_date, plan_content, complete_content, is_complete, problem, insert_time, 
+    last_time, status, user_id, user_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_daily
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ht_daily
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ht.oa.jk.model.HtDaily" >
+    insert into ht_daily (id, daily_date, plan_content, 
+      complete_content, is_complete, problem, 
+      insert_time, last_time, status, 
+      user_id, user_name)
+    values (#{id,jdbcType=BIGINT}, #{dailyDate,jdbcType=TIMESTAMP}, #{planContent,jdbcType=VARCHAR}, 
+      #{completeContent,jdbcType=VARCHAR}, #{isComplete,jdbcType=INTEGER}, #{problem,jdbcType=VARCHAR}, 
+      #{insertTime,jdbcType=TIMESTAMP}, #{lastTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
+      #{userId,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ht.oa.jk.model.HtDaily" >
+    insert into ht_daily
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="dailyDate != null" >
+        daily_date,
+      </if>
+      <if test="planContent != null" >
+        plan_content,
+      </if>
+      <if test="completeContent != null" >
+        complete_content,
+      </if>
+      <if test="isComplete != null" >
+        is_complete,
+      </if>
+      <if test="problem != null" >
+        problem,
+      </if>
+      <if test="insertTime != null" >
+        insert_time,
+      </if>
+      <if test="lastTime != null" >
+        last_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="dailyDate != null" >
+        #{dailyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="planContent != null" >
+        #{planContent,jdbcType=VARCHAR},
+      </if>
+      <if test="completeContent != null" >
+        #{completeContent,jdbcType=VARCHAR},
+      </if>
+      <if test="isComplete != null" >
+        #{isComplete,jdbcType=INTEGER},
+      </if>
+      <if test="problem != null" >
+        #{problem,jdbcType=VARCHAR},
+      </if>
+      <if test="insertTime != null" >
+        #{insertTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastTime != null" >
+        #{lastTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.oa.jk.model.HtDaily" >
+    update ht_daily
+    <set >
+      <if test="dailyDate != null" >
+        daily_date = #{dailyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="planContent != null" >
+        plan_content = #{planContent,jdbcType=VARCHAR},
+      </if>
+      <if test="completeContent != null" >
+        complete_content = #{completeContent,jdbcType=VARCHAR},
+      </if>
+      <if test="isComplete != null" >
+        is_complete = #{isComplete,jdbcType=INTEGER},
+      </if>
+      <if test="problem != null" >
+        problem = #{problem,jdbcType=VARCHAR},
+      </if>
+      <if test="insertTime != null" >
+        insert_time = #{insertTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastTime != null" >
+        last_time = #{lastTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.oa.jk.model.HtDaily" >
+    update ht_daily
+    set daily_date = #{dailyDate,jdbcType=TIMESTAMP},
+      plan_content = #{planContent,jdbcType=VARCHAR},
+      complete_content = #{completeContent,jdbcType=VARCHAR},
+      is_complete = #{isComplete,jdbcType=INTEGER},
+      problem = #{problem,jdbcType=VARCHAR},
+      insert_time = #{insertTime,jdbcType=TIMESTAMP},
+      last_time = #{lastTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=BIGINT},
+      user_name = #{userName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

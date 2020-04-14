@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <title></title>
+    <script th:include="include/base :: base"></script>
+    <link rel="stylesheet" type="text/css"
+          th:href="${jsResPath}+@{resources/css/basic.css?dc_=}+${dc}">
+    <link rel="stylesheet" type="text/css"
+          th:href="${jsCdnPath}+@{bootstrap/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="x-page">
+    <div class="x-oper">
+        <input id="add" type="button" class="btn btn-primary btn-sm" value="新增账号">
+    </div>
+    <div class="x-content">
+        <table id="dataList" class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>归属人</th>
+                <th>剩余数量</th>
+                <th>总数量</th>
+                <th>备注</th>
+                <th>添加时间</th>
+                <th>状态</th>
+                <th style="width: 220px;">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        <div id="page"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="${jsCdnPath}+@{jquery/jquery-1.9.1.min.js}"></script>
+<script type="text/javascript" th:src="${jsCdnPath}+@{layer/layer.js}"></script>
+<script type="text/javascript" th:src="${jsCdnPath}+@{laypage/laypage.js}"></script>
+<script type="text/javascript" th:src="${jsResPath}+@{resources/js/base.js}"></script>
+<script type="text/javascript">
+
+    var currPage = 1;
+    var limit = 10;
+
+    function search() {
+        loadData();
+    }
+
+    function closeLayer(msg) {
+        layer.close(currTc);
+        if (msg) {
+            commonTip(msg);
+        }
+        loadData();
+    }
+
+    /**
+     * 导入数据
+     */
+    function loadData() {
+        currTc = layer.load();
+        var param = {
+            url: jsDataPath + 'account/list',
+            type: 'POST',
+            data: {
+                page: currPage,
+                limit: limit
+            }
+        };
+        ajaxCallback(param, loadDataCallback);
+    }
+
+    function loadDataCallback(msg) {
+        layer.close(currTc);
+        if (msg && msg.code == 200) {
+            var dataTable = $('#dataList tbody');
+            dataTable.empty();
+            var total = msg.total;
+            var dataList = msg.data;
+            if (dataList && dataList.length > 0) {
+                var tplArr = [];
+                for (var i = 0; i < dataList.length; i++) {
+                    tplArr.push(getEleTpl(dataList[i], (i + 1)));
+                }
+                dataTable.append(tplArr.join(''));
+                laypage({
+                    cont: 'page',
+                    pages: Math.ceil(total / limit),
+                    skip: true,
+                    skin: '#0B83A9',
+                    curr: currPage,
+                    jump: function (e) {
+                        if (currPage == e.curr) {
+                            return;
+                        }
+                        currPage = e.curr;
+                        loadData();
+                    }
+                });
+            } else {
+
+                laypage({
+                    cont: 'page',
+                    pages: '1',
+                    skin: '#0B83A9',
+                    curr: currPage
+                });
+            }
+        }
+    }
+
+    function getEleTpl(item, i) {
+        var tpl = '<tr>' +
+            '<td>' + getValueByKey("ownerMid", item) + '</td>' +
+            '<td>' + item.enableTotal + '</td>' +
+            '<td>' + item.accTotal + '</td>' +
+            '<td>' + getValueByKey("remark", item) + '</td>' +
+            '<td>' + getValueByKey("insertTime", item) + '</td>' +
+            '<td>' + getValueByKey("statusDesc", item) + '</td>' +
+            '<td>' +
+            getOperationEle(item) +
+            '</td>' +
+            '</tr>';
+        return tpl;
+    }
+
+    function getOperationEle(item) {
+        var eleArr = [];
+        eleArr.push('<a class="btn btn-link btn-xs" event-type="develop" href="javascript:void(0);" data-id="' + item.ownerMid + '">开发者信息</a>');
+        eleArr.push('<a class="btn btn-link btn-xs" event-type="modify" href="javascript:void(0);" data-id="' + item.id + '">修改</a>');
+        eleArr.push('<a class="btn btn-link btn-xs" event-type="sign" href="javascript:void(0);" data-id="' + item.ownerMid + '">签名管理</a>');
+        eleArr.push('<a class="btn btn-link btn-xs" event-type="tpl" href="javascript:void(0);" data-id="' + item.ownerMid + '">模板管理</a>');
+        eleArr.push('<a class="btn btn-link btn-xs" event-type="recharge" href="javascript:void(0);" data-id="' + item.ownerMid + '">人工充值</a>');
+        return eleArr.join('|');
+    }
+
+    //加载初始数据
+    loadData();
+
+    $('#add').click(function () {
+        currTc = layer.open({
+            type: 2,
+            title: '新增账号',
+            area: ['95%', '90%'],
+            content: jsDataPath + 'account/add.htm'
+        });
+    });
+
+    $(document).on('click', '[event-type=develop]', function () {
+        var ownerMid = $(this).attr('data-id');
+        currTc = layer.open({
+            type: 2,
+            offset: '20px',
+            title: '开发者信息',
+            area: ['95%', '90%'],
+            content: jsDataPath + 'account/develop.htm?ownerMid=' + ownerMid
+        });
+    });
+
+    $(document).on('click', '[event-type=modify]', function () {
+        var id = $(this).attr('data-id');
+        currTc = layer.open({
+            type: 2,
+            offset: '20px',
+            title: '修改信息',
+            area: ['95%', '90%'],
+            content: jsDataPath + 'account/modify.htm?id=' + id
+        });
+    });
+
+    $(document).on('click', '[event-type=sign]', function () {
+        var ownerMid = $(this).attr('data-id');
+        currTc = layer.open({
+            type: 2,
+            offset: '20px',
+            title: '签名管理',
+            area: ['95%', '90%'],
+            content: jsDataPath + 'sign/listView.htm?ownerMid=' + ownerMid
+        });
+    });
+
+    $(document).on('click', '[event-type=tpl]', function () {
+        var ownerMid = $(this).attr('data-id');
+        currTc = layer.open({
+            type: 2,
+            offset: '20px',
+            title: '模板管理',
+            area: ['95%', '90%'],
+            content: jsDataPath + 'tpl/ownerListView.htm?ownerMid=' + ownerMid
+        });
+    });
+
+    $(document).on('click', '[event-type=recharge]', function () {
+        var ownerMid = $(this).attr('data-id');
+        currTc = layer.open({
+            type: 2,
+            offset: '20px',
+            title: '人工充值',
+            area: ['95%', '90%'],
+            content: jsDataPath + 'recharge/artificial.htm?ownerMid=' + ownerMid
+        });
+    });
+
+</script>
+</html>
