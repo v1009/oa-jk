@@ -1,6 +1,6 @@
-package com.ht.oa.jk.config;
+package com.ht.oa.manage.config;
 
-import com.ht.oa.jk.utils.common.StringUtils;
+import com.ht.oa.manage.utils.common.StringUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;

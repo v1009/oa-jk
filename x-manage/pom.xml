@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.ht.oa</groupId>
-    <artifactId>jk</artifactId>
-    <version>1.0</version>
-    <name>jk</name>
+    <artifactId>manage</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>manage</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -21,6 +21,10 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -78,7 +82,7 @@
     </dependencies>
 
     <build>
-        <finalName>ht-oa-jk</finalName>
+        <finalName>ht-oa-manage</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
