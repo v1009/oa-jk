@@ -19,7 +19,7 @@
     last_time, status, user_id, user_name
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from ht_daily
     where id = #{id,jdbcType=BIGINT}
@@ -170,5 +170,17 @@
       last_time = #{lastTime,jdbcType=TIMESTAMP}
     where user_name = #{userName,jdbcType=VARCHAR} and DATE_FORMAT(daily_date,'%Y-%m-%d') = DATE_FORMAT(#{dailyDate},'%Y-%m-%d') and status=1
   </update>
+  <!-- 查询某天的日报记录 -->
+  <select id="queryListByDate" parameterType="java.lang.String" resultType="com.ht.oa.manage.pojo.HtDailyData">
+    select
+    DATE_FORMAT(daily_date,'%m-%d') as dailyDate,
+    user_name as userName,
+    plan_content as planContent,
+    is_complete as isComplete,
+    complete_content as completeContent,
+    problem as problem
+    from ht_daily
+    where DATE_FORMAT(daily_date,'%Y-%m-%d') = #{date} and status=1
+  </select>
 
 </mapper>

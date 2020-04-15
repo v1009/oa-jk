@@ -1,6 +1,9 @@
-package com.ht.oa.manage.controller.service;
+package com.ht.oa.manage.service;
 
 import com.ht.oa.manage.model.HtDaily;
+import com.ht.oa.manage.pojo.HtDailyData;
+
+import java.util.List;
 
 public interface DailyService {
 
@@ -27,5 +30,13 @@ public interface DailyService {
      * @return
      */
     boolean completeSubmit(HtDaily htDaily);
+
+    /**
+     * 查询某天的日报记录
+     *
+     * @param date
+     * @return
+     */
+    List<HtDailyData> queryListByDate(String date);
 
 }

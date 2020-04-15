@@ -1,10 +1,13 @@
-package com.ht.oa.manage.controller.service.impl;
+package com.ht.oa.manage.service.impl;
 
-import com.ht.oa.manage.controller.service.DailyService;
+import com.ht.oa.manage.pojo.HtDailyData;
+import com.ht.oa.manage.service.DailyService;
 import com.ht.oa.manage.dao.HtDailyMapper;
 import com.ht.oa.manage.model.HtDaily;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class DailyServiceImpl implements DailyService {
@@ -33,6 +36,11 @@ public class DailyServiceImpl implements DailyService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<HtDailyData> queryListByDate(String date) {
+        return htDailyMapper.queryListByDate(date);
     }
 
 }

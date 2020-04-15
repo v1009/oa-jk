@@ -1,12 +1,19 @@
 package com.ht.oa.manage.controller;
 
-import com.ht.oa.manage.controller.service.DailyService;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.EasyExcelFactory;
+import com.alibaba.excel.ExcelWriter;
+import com.ht.oa.manage.config.ConfigParam;
+import com.ht.oa.manage.pojo.HtDailyData;
+import com.ht.oa.manage.service.DailyService;
 import com.ht.oa.manage.model.HtDaily;
 import com.ht.oa.manage.model.code.ResultCode;
 import com.ht.oa.manage.model.resp.CommonResponseSimple;
+import com.ht.oa.manage.utils.common.BaseUtils;
 import com.ht.oa.manage.utils.common.DateUtils;
 import com.ht.oa.manage.utils.common.ResultUtils;
 import com.ht.oa.manage.utils.common.StringUtils;
+import com.ht.oa.manage.utils.excel.FileUtils;
 import com.ht.oa.manage.utils.log.LogUtils;
 import com.ht.oa.manage.utils.seq.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +24,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 日报
@@ -138,15 +150,35 @@ public class DailyAction {
         return commonResponse;
     }
 
-
     /**
      * 导出当天的日报
      */
     @RequestMapping("/exportTodayDaily")
-    public void exportTodayDaily() {
-
-
+    public void exportTodayDaily(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String filePath = ConfigParam.fileSavePrefixPath + BaseUtils.getUuid();
+            FileUtils.isExistDirIfCan(filePath);
+            // 这里 需要指定写用哪个class去读，然后写到第一个sheet，名字为模板 然后文件流会自动关闭
+            // 如果这里想使用03 则 传入excelType参数即可
+            String date = DateUtils.getYMd();
+//            String date = "2020-04-15";
+            filePath += "/" + date + "-日报.xlsx";
+            List<HtDailyData> list = dailyService.queryListByDate(date);
+            if (list != null && list.size() > 0) {
+                for (HtDailyData htDailyData : list) {
+                    String isComplete = htDailyData.getIsComplete();
+                    if ("1".equals(isComplete)) {
+                        htDailyData.setIsComplete("是");
+                    } else {
+                        htDailyData.setIsComplete("否");
+                    }
+                }
+            }
+            EasyExcel.write(filePath, HtDailyData.class).sheet("日报").doWrite(list);
+            FileUtils.download(response, request, new File(filePath), true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-
 
 }

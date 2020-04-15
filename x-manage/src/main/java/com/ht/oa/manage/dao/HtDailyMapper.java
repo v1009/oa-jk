@@ -1,6 +1,9 @@
 package com.ht.oa.manage.dao;
 
 import com.ht.oa.manage.model.HtDaily;
+import com.ht.oa.manage.pojo.HtDailyData;
+
+import java.util.List;
 
 public interface HtDailyMapper extends BaseMapper {
     int deleteByPrimaryKey(Long id);
@@ -16,5 +19,7 @@ public interface HtDailyMapper extends BaseMapper {
     int updateByPrimaryKey(HtDaily record);
 
     int completeSubmit(HtDaily htDaily);
+
+    List<HtDailyData> queryListByDate(String date);
 
 }
