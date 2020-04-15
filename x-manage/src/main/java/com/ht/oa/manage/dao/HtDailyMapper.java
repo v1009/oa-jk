@@ -14,4 +14,7 @@ public interface HtDailyMapper extends BaseMapper {
     int updateByPrimaryKeySelective(HtDaily record);
 
     int updateByPrimaryKey(HtDaily record);
+
+    int completeSubmit(HtDaily htDaily);
+
 }

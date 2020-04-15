@@ -26,4 +26,13 @@ public class DailyServiceImpl implements DailyService {
         return false;
     }
 
+    @Override
+    public boolean completeSubmit(HtDaily htDaily) {
+        int res = htDailyMapper.completeSubmit(htDaily);
+        if (res > 0) {
+            return true;
+        }
+        return false;
+    }
+
 }

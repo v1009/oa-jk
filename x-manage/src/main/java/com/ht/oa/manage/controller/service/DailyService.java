@@ -20,4 +20,12 @@ public interface DailyService {
      */
     boolean modify(HtDaily htDaily);
 
+    /**
+     * 提交完成内容
+     *
+     * @param htDaily
+     * @return
+     */
+    boolean completeSubmit(HtDaily htDaily);
+
 }

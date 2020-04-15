@@ -161,4 +161,14 @@
       user_name = #{userName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <!-- 更新完成 -->
+  <update id="completeSubmit" parameterType="com.ht.oa.manage.model.HtDaily">
+    update ht_daily
+    set is_complete = #{isComplete,jdbcType=INTEGER},
+      complete_content = #{completeContent,jdbcType=VARCHAR},
+      problem = #{problem,jdbcType=VARCHAR},
+      last_time = #{lastTime,jdbcType=TIMESTAMP}
+    where user_name = #{userName,jdbcType=VARCHAR} and DATE_FORMAT(daily_date,'%Y-%m-%d') = DATE_FORMAT(#{dailyDate},'%Y-%m-%d') and status=1
+  </update>
+
 </mapper>
