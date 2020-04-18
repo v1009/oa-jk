@@ -7,7 +7,7 @@ import java.util.UUID;
 public class TokenUtils {
 
     public static final String charCom = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_";
-    public static final int charLen = 63;
+    public static final int charLen = 128;
     public static final int expiresIn = 7200;
 
     /**

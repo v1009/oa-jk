@@ -1,6 +1,10 @@
 package com.ht.oa.jk.dao;
 
 import com.ht.oa.jk.model.HtDaily;
+import com.ht.oa.jk.model.req.HtDailyReq;
+
+import java.util.List;
+import java.util.Map;
 
 public interface HtDailyMapper extends BaseMapper {
     int deleteByPrimaryKey(Long id);
@@ -14,4 +18,7 @@ public interface HtDailyMapper extends BaseMapper {
     int updateByPrimaryKeySelective(HtDaily record);
 
     int updateByPrimaryKey(HtDaily record);
+
+    List<Map<String,Object>> list(HtDailyReq htDailyReq);
+
 }

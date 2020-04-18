@@ -161,4 +161,19 @@
       user_name = #{userName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <!-- 查询某天的日报记录 -->
+  <select id="list" parameterType="com.ht.oa.jk.model.req.HtDailyReq" resultType="java.util.Map">
+    select
+    DATE_FORMAT(daily_date,'%m-%d') as dailyDate,
+    user_name as userName,
+    plan_content as planContent,
+    is_complete as isComplete,
+    complete_content as completeContent,
+    problem as problem
+    from ht_daily
+    where status=1
+    order by id desc
+    limit #{start} ,#{limit}
+  </select>
+
 </mapper>

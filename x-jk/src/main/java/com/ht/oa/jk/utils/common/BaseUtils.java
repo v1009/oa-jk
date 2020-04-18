@@ -99,4 +99,19 @@ public class BaseUtils {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
+    /**
+     * 获取ip
+     */
+    public static String getRequestIp(HttpServletRequest request) {
+        String ip = request.getHeader("x-forwarded-for");
+        if (ip == null) {
+            ip = request.getRemoteAddr();
+        }
+        //假如经过多层反向代理，则取第一个
+        if (ip != null && ip.contains(",")) {
+            ip = ip.split(",")[0].trim();
+        }
+        return ip;
+    }
+
 }
