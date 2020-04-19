@@ -8,11 +8,13 @@ public class HtDaily extends BaseModel implements Serializable {
 
     private Date dailyDate;
 
+    private Integer dailyDateNum;
+
     private String planContent;
 
-    private String completeContent;
-
     private Integer isComplete;
+
+    private String completeContent;
 
     private String problem;
 
@@ -44,6 +46,14 @@ public class HtDaily extends BaseModel implements Serializable {
         this.dailyDate = dailyDate;
     }
 
+    public Integer getDailyDateNum() {
+        return dailyDateNum;
+    }
+
+    public void setDailyDateNum(Integer dailyDateNum) {
+        this.dailyDateNum = dailyDateNum;
+    }
+
     public String getPlanContent() {
         return planContent;
     }
@@ -52,20 +62,20 @@ public class HtDaily extends BaseModel implements Serializable {
         this.planContent = planContent == null ? null : planContent.trim();
     }
 
-    public String getCompleteContent() {
-        return completeContent;
-    }
-
-    public void setCompleteContent(String completeContent) {
-        this.completeContent = completeContent == null ? null : completeContent.trim();
-    }
-
     public Integer getIsComplete() {
         return isComplete;
     }
 
     public void setIsComplete(Integer isComplete) {
         this.isComplete = isComplete;
+    }
+
+    public String getCompleteContent() {
+        return completeContent;
+    }
+
+    public void setCompleteContent(String completeContent) {
+        this.completeContent = completeContent == null ? null : completeContent.trim();
     }
 
     public String getProblem() {
@@ -130,9 +140,10 @@ public class HtDaily extends BaseModel implements Serializable {
         HtDaily other = (HtDaily) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
             && (this.getDailyDate() == null ? other.getDailyDate() == null : this.getDailyDate().equals(other.getDailyDate()))
+            && (this.getDailyDateNum() == null ? other.getDailyDateNum() == null : this.getDailyDateNum().equals(other.getDailyDateNum()))
             && (this.getPlanContent() == null ? other.getPlanContent() == null : this.getPlanContent().equals(other.getPlanContent()))
-            && (this.getCompleteContent() == null ? other.getCompleteContent() == null : this.getCompleteContent().equals(other.getCompleteContent()))
             && (this.getIsComplete() == null ? other.getIsComplete() == null : this.getIsComplete().equals(other.getIsComplete()))
+            && (this.getCompleteContent() == null ? other.getCompleteContent() == null : this.getCompleteContent().equals(other.getCompleteContent()))
             && (this.getProblem() == null ? other.getProblem() == null : this.getProblem().equals(other.getProblem()))
             && (this.getInsertTime() == null ? other.getInsertTime() == null : this.getInsertTime().equals(other.getInsertTime()))
             && (this.getLastTime() == null ? other.getLastTime() == null : this.getLastTime().equals(other.getLastTime()))
@@ -147,9 +158,10 @@ public class HtDaily extends BaseModel implements Serializable {
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
         result = prime * result + ((getDailyDate() == null) ? 0 : getDailyDate().hashCode());
+        result = prime * result + ((getDailyDateNum() == null) ? 0 : getDailyDateNum().hashCode());
         result = prime * result + ((getPlanContent() == null) ? 0 : getPlanContent().hashCode());
-        result = prime * result + ((getCompleteContent() == null) ? 0 : getCompleteContent().hashCode());
         result = prime * result + ((getIsComplete() == null) ? 0 : getIsComplete().hashCode());
+        result = prime * result + ((getCompleteContent() == null) ? 0 : getCompleteContent().hashCode());
         result = prime * result + ((getProblem() == null) ? 0 : getProblem().hashCode());
         result = prime * result + ((getInsertTime() == null) ? 0 : getInsertTime().hashCode());
         result = prime * result + ((getLastTime() == null) ? 0 : getLastTime().hashCode());

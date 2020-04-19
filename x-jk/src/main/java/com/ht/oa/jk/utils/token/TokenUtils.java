@@ -7,7 +7,7 @@ import java.util.UUID;
 public class TokenUtils {
 
     public static final String charCom = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_";
-    public static final int charLen = 128;
+    public static final int charLen = 63;
     public static final int expiresIn = 7200;
 
     /**
@@ -15,7 +15,7 @@ public class TokenUtils {
      */
     public static String getAccessToken() {
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 128; i++) {
             int random = new Random().nextInt(charLen);
             builder.append(charCom.substring(random, random + 1));
         }

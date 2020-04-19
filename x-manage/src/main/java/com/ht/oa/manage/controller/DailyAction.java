@@ -69,6 +69,7 @@ public class DailyAction {
             }
             Date now = DateUtils.getNowDate();
             htDaily.setDailyDate(now);
+            htDaily.setDailyDateNum(DateUtils.getYMdToNum());
             htDaily.setIsComplete(0);
             htDaily.setInsertTime(now);
             htDaily.setLastTime(now);

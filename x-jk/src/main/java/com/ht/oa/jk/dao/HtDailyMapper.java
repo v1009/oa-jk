@@ -2,6 +2,7 @@ package com.ht.oa.jk.dao;
 
 import com.ht.oa.jk.model.HtDaily;
 import com.ht.oa.jk.model.req.HtDailyReq;
+import com.ht.oa.jk.pojo.HtDailyData;
 
 import java.util.List;
 import java.util.Map;
@@ -20,5 +21,7 @@ public interface HtDailyMapper extends BaseMapper {
     int updateByPrimaryKey(HtDaily record);
 
     List<Map<String,Object>> list(HtDailyReq htDailyReq);
+
+    List<HtDailyData> queryListByDate(String date);
 
 }

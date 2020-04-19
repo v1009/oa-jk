@@ -109,6 +109,15 @@ public final class DateUtils {
     }
 
     /**
+     * 获取当前时间的数字表示
+     */
+    public static int getYMdToNum() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        String str = format.format(new Date());
+        return Integer.parseInt(str);
+    }
+
+    /**
      * 获取当前时间的字符串表示
      */
     public static String getYMdHms() {
