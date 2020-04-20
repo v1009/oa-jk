@@ -42,7 +42,7 @@
             <property name="rootInterface" value="com.ht.oa.jk.dao.BaseMapper"/>
         </javaClientGenerator>
 
-        <table schema="" tableName="ht_daily" domainObjectName="HtDaily"
+        <table schema="" tableName="s_resources" domainObjectName="SResources"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
