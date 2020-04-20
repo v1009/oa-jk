@@ -188,7 +188,7 @@
       <if test="dailyDateNum != null">and daily_date_num = #{dailyDateNum,jdbcType=INTEGER}</if>
       <if test="true">and status=1</if>
     </where>
-    order by id desc
+    order by id
     limit #{start} ,#{limit}
   </select>
   <!-- 查询某天的日报记录 -->
