@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ht.oa.jk.dao.SUsersMapper">
+  <resultMap id="BaseResultMap" type="com.ht.oa.jk.model.SUsers">
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="user_account" jdbcType="VARCHAR" property="userAccount" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_phone" jdbcType="VARCHAR" property="userPhone" />
+    <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
+    <result column="user_birth" jdbcType="TIMESTAMP" property="userBirth" />
+    <result column="user_head" jdbcType="VARCHAR" property="userHead" />
+    <result column="sex" jdbcType="INTEGER" property="sex" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="user_pwd" jdbcType="VARCHAR" property="userPwd" />
+    <result column="salt" jdbcType="VARCHAR" property="salt" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="register_time" jdbcType="TIMESTAMP" property="registerTime" />
+    <result column="last_time" jdbcType="TIMESTAMP" property="lastTime" />
+    <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    user_id, user_account, user_name, user_phone, user_email, user_birth, user_head, 
+    sex, address, user_pwd, salt, status, register_time, last_time, last_login_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from s_users
+    where user_id = #{userId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from s_users
+    where user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ht.oa.jk.model.SUsers">
+    insert into s_users (user_id, user_account, user_name, 
+      user_phone, user_email, user_birth, 
+      user_head, sex, address, 
+      user_pwd, salt, status, 
+      register_time, last_time, last_login_time
+      )
+    values (#{userId,jdbcType=BIGINT}, #{userAccount,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{userPhone,jdbcType=VARCHAR}, #{userEmail,jdbcType=VARCHAR}, #{userBirth,jdbcType=TIMESTAMP}, 
+      #{userHead,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, 
+      #{userPwd,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{registerTime,jdbcType=TIMESTAMP}, #{lastTime,jdbcType=TIMESTAMP}, #{lastLoginTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ht.oa.jk.model.SUsers">
+    insert into s_users
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userAccount != null">
+        user_account,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="userPhone != null">
+        user_phone,
+      </if>
+      <if test="userEmail != null">
+        user_email,
+      </if>
+      <if test="userBirth != null">
+        user_birth,
+      </if>
+      <if test="userHead != null">
+        user_head,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="userPwd != null">
+        user_pwd,
+      </if>
+      <if test="salt != null">
+        salt,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="registerTime != null">
+        register_time,
+      </if>
+      <if test="lastTime != null">
+        last_time,
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="userAccount != null">
+        #{userAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhone != null">
+        #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="userEmail != null">
+        #{userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="userBirth != null">
+        #{userBirth,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userHead != null">
+        #{userHead,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="userPwd != null">
+        #{userPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="registerTime != null">
+        #{registerTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastTime != null">
+        #{lastTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginTime != null">
+        #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.oa.jk.model.SUsers">
+    update s_users
+    <set>
+      <if test="userAccount != null">
+        user_account = #{userAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhone != null">
+        user_phone = #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="userEmail != null">
+        user_email = #{userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="userBirth != null">
+        user_birth = #{userBirth,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userHead != null">
+        user_head = #{userHead,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="userPwd != null">
+        user_pwd = #{userPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        salt = #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="registerTime != null">
+        register_time = #{registerTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastTime != null">
+        last_time = #{lastTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.oa.jk.model.SUsers">
+    update s_users
+    set user_account = #{userAccount,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      user_phone = #{userPhone,jdbcType=VARCHAR},
+      user_email = #{userEmail,jdbcType=VARCHAR},
+      user_birth = #{userBirth,jdbcType=TIMESTAMP},
+      user_head = #{userHead,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      user_pwd = #{userPwd,jdbcType=VARCHAR},
+      salt = #{salt,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      register_time = #{registerTime,jdbcType=TIMESTAMP},
+      last_time = #{lastTime,jdbcType=TIMESTAMP},
+      last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP}
+    where user_id = #{userId,jdbcType=BIGINT}
+  </update>
+  <!-- 查询用户 -->
+  <select id="list" parameterType="com.ht.oa.jk.model.req.SUsersReq" resultType="java.util.Map">
+    select
+    user_id as userId,
+    user_name as userName,
+    user_email as userEmail
+    from s_users
+    <where>
+      <if test="true">and status=1</if>
+    </where>
+    order by user_id
+    limit #{start} ,#{limit}
+  </select>
+
+</mapper>

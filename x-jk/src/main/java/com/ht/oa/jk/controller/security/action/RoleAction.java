@@ -1,16 +1,15 @@
 package com.ht.oa.jk.controller.security.action;
 
 import com.ht.oa.jk.controller.security.service.RoleService;
-import com.ht.oa.jk.model.SRoleResource;
+import com.ht.oa.jk.model.SRoleResources;
 import com.ht.oa.jk.model.SRoles;
 import com.ht.oa.jk.model.code.ResultCode;
 import com.ht.oa.jk.model.resp.CommonResponse;
-import com.ht.oa.jk.utils.auth.CacheMember;
-import com.ht.oa.jk.utils.auth.LoginManage;
 import com.ht.oa.jk.utils.common.DateUtils;
 import com.ht.oa.jk.utils.common.ResultUtils;
 import com.ht.oa.jk.utils.log.LogUtils;
-import com.ht.oa.jk.utils.sso.ApiUtils;
+import com.ht.oa.jk.utils.sso.SsoApiUtils;
+import com.ht.oa.jk.utils.system.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -42,12 +41,11 @@ public class RoleAction {
         CommonResponse commonResponse = new CommonResponse();
         try {
             //获取访问系统信息
-            String token = request.getParameter("token");
-            long ownerMid = ApiUtils.getSystemOwnerId(token);
+            String token = SystemUtils.getRequestToken(request);
+            long ownerMid = SsoApiUtils.getSystemOwnerId(token);
             if (ownerMid == 0) {
-                return ResultUtils.getLoginResult();
+                return ResultUtils.login();
             }
-
             sRoles.setOwnerMid(ownerMid);
             List<Map<String, Object>> list = roleService.queryAllRoles(sRoles);
             commonResponse.setData(list);
@@ -69,14 +67,12 @@ public class RoleAction {
     public Object add(SRoles model, HttpServletRequest request, HttpServletResponse response) {
         CommonResponse commonResponse = new CommonResponse();
         try {
-            CacheMember cacheMember = LoginManage.getCacheMember(request, response);
-            long mid = cacheMember.getMid();
-
+            long mid = SystemUtils.getMid(request);
             //获取访问系统信息
-            String token = request.getParameter("token");
-            long ownerMid = ApiUtils.getSystemOwnerId(token);
+            String token = SystemUtils.getRequestToken(request);
+            long ownerMid = SsoApiUtils.getSystemOwnerId(token);
             if (ownerMid == 0) {
-                return ResultUtils.getLoginResult();
+                return ResultUtils.login();
             }
 
             Date now = DateUtils.getNowDate();
@@ -111,14 +107,12 @@ public class RoleAction {
     public Object modify(SRoles sRoles, HttpServletRequest request, HttpServletResponse response) {
         CommonResponse commonResponse = new CommonResponse();
         try {
-            CacheMember cacheMember = LoginManage.getCacheMember(request, response);
-            long mid = cacheMember.getMid();
-
+            long mid = SystemUtils.getMid(request);
             //获取访问系统信息
-            String token = request.getParameter("token");
-            long ownerMid = ApiUtils.getSystemOwnerId(token);
+            String token = SystemUtils.getRequestToken(request);
+            long ownerMid = SsoApiUtils.getSystemOwnerId(token);
             if (ownerMid == 0) {
-                return ResultUtils.getLoginResult();
+                return ResultUtils.login();
             }
 
             sRoles.setOwnerMid(ownerMid);
@@ -163,14 +157,12 @@ public class RoleAction {
                 commonResponse.setResMsg("该角色已经被使用，不能删除！");
                 return commonResponse;
             }
-            CacheMember cacheMember = LoginManage.getCacheMember(request, response);
-            long mid = cacheMember.getMid();
-
+            long mid = SystemUtils.getMid(request);
             //获取访问系统信息
-            String token = request.getParameter("token");
-            long ownerMid = ApiUtils.getSystemOwnerId(token);
+            String token = SystemUtils.getRequestToken(request);
+            long ownerMid = SsoApiUtils.getSystemOwnerId(token);
             if (ownerMid == 0) {
-                return ResultUtils.getLoginResult();
+                return ResultUtils.login();
             }
 
             Date now = DateUtils.getNowDate();
@@ -211,20 +203,18 @@ public class RoleAction {
             for (int i = 0; i < rIdArr.length; i++) {
                 rIdList[i] = Long.parseLong(rIdArr[i]);
             }
-            CacheMember cacheMember = LoginManage.getCacheMember(request, response);
-            long mid = cacheMember.getMid();
-
+            long mid = SystemUtils.getMid(request);
             //获取访问系统信息
-            String token = request.getParameter("token");
-            long ownerMid = ApiUtils.getSystemOwnerId(token);
+            String token = SystemUtils.getRequestToken(request);
+            long ownerMid = SsoApiUtils.getSystemOwnerId(token);
             if (ownerMid == 0) {
-                return ResultUtils.getLoginResult();
+                return ResultUtils.login();
             }
 
-            List<SRoleResource> sRoleResourceList = new ArrayList<>();
+            List<SRoleResources> sRoleResourceList = new ArrayList<>();
             Date now = DateUtils.getNowDate();
             for (long resourceId : rIdList) {
-                SRoleResource sRoleResource = new SRoleResource();
+                SRoleResources sRoleResource = new SRoleResources();
                 sRoleResource.setResourceId(resourceId);
                 sRoleResource.setRoleId(Long.parseLong(roleId));
                 sRoleResource.setInsertTime(now);

@@ -18,7 +18,7 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     private SRolesMapper sRolesMapper;
     @Autowired
-    private SRoleResourcesMapper sRoleResourceMapper;
+    private SRoleResourcesMapper sRoleResourcesMapper;
 
     @Override
     public int add(SRoles sRoles) {
@@ -59,8 +59,8 @@ public class RoleServiceImpl implements RoleService {
         SRoleResources sRoleResource = new SRoleResources();
         sRoleResource.setRoleId(roleId);
         sRoleResource.setOwnerMid(ownerMid);
-        int res = sRoleResourceMapper.delRecordByRoleId(sRoleResource);
-        res = sRoleResourceMapper.batchInsert(sRoleResourceList);
+        int res = sRoleResourcesMapper.delRecordByRoleId(sRoleResource);
+        res = sRoleResourcesMapper.batchInsert(sRoleResourceList);
         if (res < 1) {
             throw new RuntimeException("addResourceToRole:批量插入失败");
         }

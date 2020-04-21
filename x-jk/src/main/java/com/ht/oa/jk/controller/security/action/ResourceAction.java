@@ -6,8 +6,8 @@ import com.ht.oa.jk.model.SResources;
 import com.ht.oa.jk.model.TreeMenu;
 import com.ht.oa.jk.model.code.ResultCode;
 import com.ht.oa.jk.model.resp.CommonResponse;
+import com.ht.oa.jk.utils.common.DateUtils;
 import com.ht.oa.jk.utils.log.LogUtils;
-import com.ht.oa.jk.utils.seq.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,8 +39,7 @@ public class ResourceAction {
     public Object add(SResources sResources) {
         CommonResponse commonResponse = new CommonResponse();
         try {
-            Date now = new Date();
-            sResources.setResourceId(IdWorker.nextId());
+            Date now = DateUtils.getNowDate();
             sResources.setInsertTime(now);
             sResources.setLastTime(now);
             sResources.setStatus(1);

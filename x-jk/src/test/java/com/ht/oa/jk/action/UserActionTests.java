@@ -17,24 +17,27 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class DailyActionTests {
+public class UserActionTests {
 
     @Autowired
     private MockMvc mockMvc;
 
     /**
-     * 查询访问记录
+     * 添加用户
      *
      * @throws Exception
      */
     @Test
-    public void list() throws Exception {
+    public void add() throws Exception {
         JSONObject params = new JSONObject();
-        params.put("page", 1);
+        params.put("mobile", "13157184276");
+        params.put("userName", "高");
+        params.put("pwd", "123456");
+        params.put("email", "934127319@qq.com");
 
         MvcResult mvcResult = mockMvc.perform(
-                MockMvcRequestBuilders.post("/daily/list")
-                        .header("Token",TokenUtils.Token)
+                MockMvcRequestBuilders.post("/user/add")
+                        .header("Token", TokenUtils.Token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JSON.toJSONString(params)))
                 .andReturn();
@@ -44,5 +47,27 @@ public class DailyActionTests {
         System.out.println(responseContent);
     }
 
+
+    /**
+     * 查询用户
+     *
+     * @throws Exception
+     */
+    @Test
+    public void list() throws Exception {
+        JSONObject params = new JSONObject();
+        params.put("page", 1);
+
+        MvcResult mvcResult = mockMvc.perform(
+                MockMvcRequestBuilders.post("/user/list")
+                        .header("Token", TokenUtils.Token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JSON.toJSONString(params)))
+                .andReturn();
+
+        String responseContent = mvcResult.getResponse().getContentAsString();
+        responseContent = new String(responseContent.getBytes("ISO-8859-1"), "UTF-8");
+        System.out.println(responseContent);
+    }
 
 }

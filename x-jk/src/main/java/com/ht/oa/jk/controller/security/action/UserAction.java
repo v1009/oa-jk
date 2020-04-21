@@ -5,23 +5,32 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ht.oa.jk.controller.security.service.UserService;
 import com.ht.oa.jk.model.SUserRole;
+import com.ht.oa.jk.model.SUsers;
 import com.ht.oa.jk.model.code.ResultCode;
+import com.ht.oa.jk.model.req.HtDailyReq;
+import com.ht.oa.jk.model.req.SUsersReq;
 import com.ht.oa.jk.model.resp.CommonResponse;
-import com.ht.oa.jk.utils.auth.CacheMember;
-import com.ht.oa.jk.utils.auth.LoginManage;
+import com.ht.oa.jk.utils.auth.AuthTools;
+import com.ht.oa.jk.utils.cache.CacheMember;
+import com.ht.oa.jk.utils.cache.MemberCacheUtils;
 import com.ht.oa.jk.utils.common.DateUtils;
 import com.ht.oa.jk.utils.common.ResultUtils;
 import com.ht.oa.jk.utils.common.StringUtils;
+import com.ht.oa.jk.utils.crypto.PwdUtils;
 import com.ht.oa.jk.utils.log.LogUtils;
-import com.ht.oa.jk.utils.sso.ApiUtils;
+import com.ht.oa.jk.utils.seq.IdWorker;
+import com.ht.oa.jk.utils.sso.SsoApiUtils;
+import com.ht.oa.jk.utils.system.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.Result;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,9 +43,66 @@ public class UserAction {
     @Autowired
     private UserService userService;
 
-    @RequestMapping("/list_view.htm")
-    public String list_view() {
-        return "security/user/list";
+    /**
+     * 添加用户
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/add")
+    @ResponseBody
+    public Object add(HttpServletRequest request, HttpServletResponse response) {
+        ServletInputStream in = null;
+        try {
+            in = request.getInputStream();
+            StringBuilder requestMsg = new StringBuilder();
+            byte[] b = new byte[4096];
+            int l;
+            while ((l = in.read(b)) != -1) {
+                requestMsg.append(new String(b, 0, l, "UTF-8"));
+            }
+            if (StringUtils.isBlank(requestMsg.toString())) {
+                return ResultUtils.paramNoPass("参数必传");
+            }
+            LogUtils.error(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            String accessToken = AuthTools.getToken(request);
+            if (StringUtils.isBlank(accessToken)) {
+                return ResultUtils.paramNoPass("accessToken不能为空");
+            }
+            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
+            if (cacheMember == null) {
+                return ResultUtils.login();
+            }
+            String mobile = reqJson.getString("mobile");
+            String pwd = reqJson.getString("pwd");
+            String userName = reqJson.getString("userName");
+            String email = reqJson.getString("email");
+            int salt = (int) (Math.random() * 10000) + 1;
+            String secretUserPwd = PwdUtils.getSecretPwd(pwd, salt);
+            Date now = DateUtils.getNowDate();
+            SUsers sUsers = new SUsers();
+            sUsers.setUserId(IdWorker.nextId());
+            sUsers.setUserPhone(mobile);
+            sUsers.setUserName(userName);
+            sUsers.setUserEmail(email);
+            sUsers.setUserPwd(secretUserPwd);
+            sUsers.setSalt(String.valueOf(salt));
+            sUsers.setRegisterTime(now);
+            sUsers.setLastTime(now);
+            sUsers.setStatus(1);
+            boolean boo = userService.add(sUsers);
+            if (boo) {
+                return ResultUtils.success("添加成功");
+            } else {
+                return ResultUtils.busiFail("添加失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtils.error("UserAction%add", e);
+            return ResultUtils.exception();
+        }
     }
 
     /**
@@ -46,62 +112,63 @@ public class UserAction {
      * @param response
      * @return
      */
-    @RequestMapping("/query.htm")
+    @RequestMapping("/list")
     @ResponseBody
-    public Object query(HttpServletRequest request, HttpServletResponse response) {
-        CommonResponse commonResponse = new CommonResponse();
+    public Object list(HttpServletRequest request, HttpServletResponse response) {
+        ServletInputStream in = null;
         try {
-            String token = request.getParameter("token");
-            //获取访问系统信息
-            long ownerMid = ApiUtils.getSystemOwnerId(token);
-            if (ownerMid == 0) {
-                return ResultUtils.getLoginResult();
+            in = request.getInputStream();
+            StringBuilder requestMsg = new StringBuilder();
+            byte[] b = new byte[4096];
+            int l;
+            while ((l = in.read(b)) != -1) {
+                requestMsg.append(new String(b, 0, l, "UTF-8"));
             }
-            String result = ApiUtils.getSystemPerson(token);
-            if (StringUtils.isBlank(result)) {
-                commonResponse.setCode(ResultCode.busiError.code());
-                commonResponse.setResMsg(ResultCode.busiError.desc());
-                return commonResponse;
+            if (StringUtils.isBlank(requestMsg.toString())) {
+                return ResultUtils.paramNoPass("参数必传");
             }
-            JSONObject resJson = JSON.parseObject(result);
-            if (resJson.getIntValue("code") == 200) {
-                JSONArray list = resJson.getJSONArray("data");
-                commonResponse.setCode(ResultCode.success.code());
-                commonResponse.setData(list);
-            } else {
-                commonResponse.setCode(ResultCode.busiError.code());
-                commonResponse.setResMsg(ResultCode.busiError.desc());
-                return commonResponse;
+            LogUtils.error(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            String accessToken = AuthTools.getToken(request);
+            if (StringUtils.isBlank(accessToken)) {
+                return ResultUtils.paramNoPass("accessToken不能为空");
             }
+            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
+            if (cacheMember == null) {
+                return ResultUtils.login();
+            }
+            Integer page = reqJson.getInteger("page");
+            if (page == null) {
+                page = 1;
+            }
+            SUsersReq sUsersReq = new SUsersReq();
+            sUsersReq.setPage(page);
+            List<Map<String, Object>> list = userService.list(sUsersReq);
+            return ResultUtils.list(list);
         } catch (Exception e) {
             e.printStackTrace();
-            commonResponse.setCode(ResultCode.failure.code());
-            commonResponse.setResMsg(ResultCode.failure.desc());
-            LogUtils.error("UserAction%query", e);
+            LogUtils.error("UserAction%list", e);
+            return ResultUtils.exception();
         }
-        return commonResponse;
     }
 
     /**
      * 添加角色到用户
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/addRoleToUser.htm")
+    @RequestMapping(method = RequestMethod.POST, value = "/addRoleToUser")
     @ResponseBody
     public Object addRoleToUser(HttpServletRequest request, HttpServletResponse response) {
         String userId = request.getParameter("userId");
         String rIds = request.getParameter("rIds");
         CommonResponse commonResponse = new CommonResponse();
         try {
-            CacheMember cacheMember = LoginManage.getCacheMember(request, response);
-            long mid = cacheMember.getMid();
-
+            long mid = SystemUtils.getMid(request);
             //获取访问系统信息
-            String token = request.getParameter("token");
-            long ownerMid = ApiUtils.getSystemOwnerId(token);
+            String token = SystemUtils.getRequestToken(request);
+            long ownerMid = SsoApiUtils.getSystemOwnerId(token);
             if (ownerMid == 0) {
-                return ResultUtils.getLoginResult();
+                return ResultUtils.login();
             }
-
             String[] rIdArr = rIds.split(",");
             long[] rIdList = new long[rIdArr.length];
             for (int i = 0; i < rIdArr.length; i++) {
@@ -129,9 +196,8 @@ public class UserAction {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            commonResponse.setCode(ResultCode.failure.code());
-            commonResponse.setResMsg(ResultCode.failure.desc());
             LogUtils.error("UserAction%addRoleToUser", e);
+            return ResultUtils.exception();
         }
         return commonResponse;
     }
@@ -139,19 +205,18 @@ public class UserAction {
     /**
      * 根据用户查询角色
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/queryRoleByUser.htm")
+    @RequestMapping(method = RequestMethod.POST, value = "/queryRoleByUser")
     @ResponseBody
     public Object queryRoleByUser(HttpServletRequest request, HttpServletResponse response) {
         String userId = request.getParameter("id");
         CommonResponse commonResponse = new CommonResponse();
         try {
             //获取访问系统信息
-            String token = request.getParameter("token");
-            long ownerMid = ApiUtils.getSystemOwnerId(token);
+            String token = SystemUtils.getRequestToken(request);
+            long ownerMid = SsoApiUtils.getSystemOwnerId(token);
             if (ownerMid == 0) {
-                return ResultUtils.getLoginResult();
+                return ResultUtils.login();
             }
-
             SUserRole sUserRole = new SUserRole();
             sUserRole.setUserId(Long.parseLong(userId));
             sUserRole.setOwnerMid(ownerMid);
@@ -160,9 +225,8 @@ public class UserAction {
             commonResponse.setCode(ResultCode.success.code());
         } catch (Exception e) {
             e.printStackTrace();
-            commonResponse.setCode(ResultCode.failure.code());
-            commonResponse.setResMsg(ResultCode.failure.desc());
             LogUtils.error("UserAction%queryRoleByUser", e);
+            return ResultUtils.exception();
         }
         return commonResponse;
     }

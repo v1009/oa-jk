@@ -11,6 +11,17 @@ import java.util.Map;
 
 public class ResultUtils {
 
+    /**
+     * success 返回
+     *
+     * @return
+     */
+    public static CommonResponseSimple success(String resMsg) {
+        CommonResponseSimple commonResponse = new CommonResponseSimple();
+        commonResponse.setCode(ResultCode.success.code());
+        commonResponse.setResMsg(resMsg);
+        return commonResponse;
+    }
 
     /**
      * list返回
@@ -31,7 +42,7 @@ public class ResultUtils {
     public static CommonResponseLogin login() {
         CommonResponseLogin commonResponseLogin = new CommonResponseLogin();
         commonResponseLogin.setCode(ResultCode.login.code());
-        commonResponseLogin.setUrl(BaseUtils.getServerSuffixPath());
+        commonResponseLogin.setUrl("login expired");
         return commonResponseLogin;
     }
 
@@ -44,6 +55,18 @@ public class ResultUtils {
     public static Object paramNoPass(String resMsg) {
         CommonResponseSimple commonResponseSimple = new CommonResponseSimple();
         commonResponseSimple.setCode(ResultCode.param.code());
+        commonResponseSimple.setResMsg(resMsg);
+        return commonResponseSimple;
+    }
+
+    /**
+     * 业务失败返回
+     *
+     * @return
+     */
+    public static Object busiFail(String resMsg) {
+        CommonResponseSimple commonResponseSimple = new CommonResponseSimple();
+        commonResponseSimple.setCode(ResultCode.busiError.code());
         commonResponseSimple.setResMsg(resMsg);
         return commonResponseSimple;
     }

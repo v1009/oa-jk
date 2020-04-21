@@ -67,7 +67,10 @@ public class DailyAction {
             if (cacheMember == null) {
                 return ResultUtils.login();
             }
-            int page = reqJson.getIntValue("page");
+            Integer page = reqJson.getInteger("page");
+            if (page == null) {
+                page = 1;
+            }
             Integer dailyDateNum = reqJson.getInteger("dailyDate");
             if (dailyDateNum == null) {
                 dailyDateNum = DateUtils.getYMdToNum();

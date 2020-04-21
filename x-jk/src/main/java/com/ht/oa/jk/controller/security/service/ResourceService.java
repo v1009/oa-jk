@@ -1,6 +1,5 @@
 package com.ht.oa.jk.controller.security.service;
 
-
 import com.ht.oa.jk.model.SResources;
 
 import java.util.List;

@@ -9,5 +9,4 @@ public class PwdUtils {
         return new Md5().getMD5ofStr(pwd + "{" + salt + "}");
     }
 
-
 }
