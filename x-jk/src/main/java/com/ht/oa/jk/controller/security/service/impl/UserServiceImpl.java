@@ -31,6 +31,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean modify(SUsers sUsers) {
+        int res = sUsersMapper.modify(sUsers);
+        if (res > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public List<Map<String, Object>> list(SUsersReq sUsersReq) {
         return sUsersMapper.list(sUsersReq);
     }

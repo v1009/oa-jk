@@ -2,6 +2,6 @@ package com.ht.oa.jk;
 
 public class TokenUtils {
 
-    public static String Token = "LNOOtv5DHFEp13IvWK63rIrwS4FUfyha8OztisZroJiuhdJMfZzZqrBkBkfttNgqbDlpuGzcOKW9oXYxmAEe7IGqMUJuaIM2mcnZ_LxaYPB80HYMAUKF3o8aFc3qOnc7ba988098686347f7b5ee8e466f5565c0";
+    public static String Token = "iAxA8X9BZIXJoAZrltxYH1iq_WeT13zdf0Um4r6DSAbFFkliiDr2I1opgmDZfXFIA5JMRJiNzCWNT5PX8jDS5Q8QlTiwce_urV4eUVsXMzD5t0iO7_vNil9UaqmfNfTBff3ec78057c342e8a78e41da33f2425e";
 
 }

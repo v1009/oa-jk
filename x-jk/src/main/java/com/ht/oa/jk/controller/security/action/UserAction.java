@@ -79,6 +79,7 @@ public class UserAction {
             String pwd = reqJson.getString("pwd");
             String userName = reqJson.getString("userName");
             String email = reqJson.getString("email");
+            String address = reqJson.getString("address");
             int salt = (int) (Math.random() * 10000) + 1;
             String secretUserPwd = PwdUtils.getSecretPwd(pwd, salt);
             Date now = DateUtils.getNowDate();
@@ -87,6 +88,7 @@ public class UserAction {
             sUsers.setUserPhone(mobile);
             sUsers.setUserName(userName);
             sUsers.setUserEmail(email);
+            sUsers.setAddress(address);
             sUsers.setUserPwd(secretUserPwd);
             sUsers.setSalt(String.valueOf(salt));
             sUsers.setRegisterTime(now);
@@ -148,6 +150,61 @@ public class UserAction {
         } catch (Exception e) {
             e.printStackTrace();
             LogUtils.error("UserAction%list", e);
+            return ResultUtils.exception();
+        }
+    }
+
+    /**
+     * 修改用户信息
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/modify")
+    @ResponseBody
+    public Object modify(HttpServletRequest request, HttpServletResponse response) {
+        ServletInputStream in = null;
+        try {
+            in = request.getInputStream();
+            StringBuilder requestMsg = new StringBuilder();
+            byte[] b = new byte[4096];
+            int l;
+            while ((l = in.read(b)) != -1) {
+                requestMsg.append(new String(b, 0, l, "UTF-8"));
+            }
+            if (StringUtils.isBlank(requestMsg.toString())) {
+                return ResultUtils.paramNoPass("参数必传");
+            }
+            LogUtils.error(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            String accessToken = AuthTools.getToken(request);
+            if (StringUtils.isBlank(accessToken)) {
+                return ResultUtils.paramNoPass("accessToken不能为空");
+            }
+            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
+            if (cacheMember == null) {
+                return ResultUtils.login();
+            }
+            long userId = reqJson.getLongValue("userId");
+            String userName = reqJson.getString("userName");
+            String email = reqJson.getString("email");
+            Date now = DateUtils.getNowDate();
+            SUsers sUsers = new SUsers();
+            sUsers.setUserId(userId);
+            sUsers.setUserName(userName);
+            sUsers.setUserEmail(email);
+            sUsers.setLastTime(now);
+            sUsers.setStatus(1);
+            boolean boo = userService.modify(sUsers);
+            if (boo) {
+                return ResultUtils.success("修改成功");
+            } else {
+                return ResultUtils.busiFail("修改失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtils.error("UserAction%modify", e);
             return ResultUtils.exception();
         }
     }

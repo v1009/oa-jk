@@ -10,12 +10,20 @@ import java.util.Map;
 public interface UserService {
 
     /**
-     * 添加用户
+     * 添加用户信息
      *
      * @param sUsers
      * @return
      */
     boolean add(SUsers sUsers);
+
+    /**
+     * 修改用户信息
+     *
+     * @param sUsers
+     * @return
+     */
+    boolean modify(SUsers sUsers);
 
     /**
      * 查询用户列表

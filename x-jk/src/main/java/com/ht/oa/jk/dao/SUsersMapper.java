@@ -21,4 +21,6 @@ public interface SUsersMapper extends BaseMapper {
 
     List<Map<String,Object>> list(SUsersReq sUsersReq);
 
+    int modify(SUsers sUsers);
+
 }

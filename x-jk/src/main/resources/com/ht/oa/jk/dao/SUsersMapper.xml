@@ -214,7 +214,9 @@
     select
     user_id as userId,
     user_name as userName,
-    user_email as userEmail
+    user_phone as userPhone,
+    user_email as userEmail,
+    address as address
     from s_users
     <where>
       <if test="true">and status=1</if>
@@ -222,5 +224,33 @@
     order by user_id
     limit #{start} ,#{limit}
   </select>
+  <!-- 更新信息 -->
+  <update id="modify" parameterType="com.ht.oa.jk.model.SUsers">
+    update s_users
+    <set>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userEmail != null">
+        user_email = #{userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="userBirth != null">
+        user_birth = #{userBirth,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userHead != null">
+        user_head = #{userHead,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="lastTime != null">
+        last_time = #{lastTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=BIGINT} and status=1
+  </update>
 
 </mapper>

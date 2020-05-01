@@ -70,4 +70,28 @@ public class UserActionTests {
         System.out.println(responseContent);
     }
 
+    /**
+     * 修改用户
+     *
+     * @throws Exception
+     */
+    @Test
+    public void modify() throws Exception {
+        JSONObject params = new JSONObject();
+        params.put("userId", 702219243709665280L);
+        params.put("userName", "高2");
+        params.put("email", "934127319@qq.com");
+
+        MvcResult mvcResult = mockMvc.perform(
+                MockMvcRequestBuilders.post("/user/modify")
+                        .header("Token", TokenUtils.Token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JSON.toJSONString(params)))
+                .andReturn();
+
+        String responseContent = mvcResult.getResponse().getContentAsString();
+        responseContent = new String(responseContent.getBytes("ISO-8859-1"), "UTF-8");
+        System.out.println(responseContent);
+    }
+
 }
