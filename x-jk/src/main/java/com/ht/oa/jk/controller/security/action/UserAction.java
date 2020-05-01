@@ -210,6 +210,57 @@ public class UserAction {
     }
 
     /**
+     * 删除用户
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/del")
+    @ResponseBody
+    public Object del(HttpServletRequest request, HttpServletResponse response) {
+        ServletInputStream in = null;
+        try {
+            in = request.getInputStream();
+            StringBuilder requestMsg = new StringBuilder();
+            byte[] b = new byte[4096];
+            int l;
+            while ((l = in.read(b)) != -1) {
+                requestMsg.append(new String(b, 0, l, "UTF-8"));
+            }
+            if (StringUtils.isBlank(requestMsg.toString())) {
+                return ResultUtils.paramNoPass("参数必传");
+            }
+            LogUtils.error(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            String accessToken = AuthTools.getToken(request);
+            if (StringUtils.isBlank(accessToken)) {
+                return ResultUtils.paramNoPass("accessToken不能为空");
+            }
+            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
+            if (cacheMember == null) {
+                return ResultUtils.login();
+            }
+            long userId = reqJson.getLongValue("userId");
+            Date now = DateUtils.getNowDate();
+            SUsers sUsers = new SUsers();
+            sUsers.setUserId(userId);
+            sUsers.setLastTime(now);
+            sUsers.setStatus(1);
+            boolean boo = userService.del(sUsers);
+            if (boo) {
+                return ResultUtils.success("删除成功");
+            } else {
+                return ResultUtils.busiFail("删除失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtils.error("UserAction%del", e);
+            return ResultUtils.exception();
+        }
+    }
+
+    /**
      * 添加角色到用户
      */
     @RequestMapping(method = RequestMethod.POST, value = "/addRoleToUser")

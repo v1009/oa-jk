@@ -23,4 +23,6 @@ public interface SUsersMapper extends BaseMapper {
 
     int modify(SUsers sUsers);
 
+    int updateToDisable(SUsers sUsers);
+
 }

@@ -30,11 +30,6 @@ public class RoleAction {
     @Autowired
     private RoleService roleService;
 
-    @RequestMapping("/home.htm")
-    public String home() {
-        return "security/role/list";
-    }
-
     @RequestMapping("/show")
     @ResponseBody
     public Object show(HttpServletRequest request, HttpServletResponse response, SRoles sRoles) {

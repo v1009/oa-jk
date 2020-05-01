@@ -67,4 +67,13 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public boolean del(SUsers sUsers) {
+        int res = sUsersMapper.updateToDisable(sUsers);
+        if (res > 0) {
+            return true;
+        }
+        return false;
+    }
+
 }

@@ -94,4 +94,26 @@ public class UserActionTests {
         System.out.println(responseContent);
     }
 
+    /**
+     * 删除用户
+     *
+     * @throws Exception
+     */
+    @Test
+    public void del() throws Exception {
+        JSONObject params = new JSONObject();
+        params.put("userId", 705753569961316352L);
+
+        MvcResult mvcResult = mockMvc.perform(
+                MockMvcRequestBuilders.post("/user/del")
+                        .header("Token", TokenUtils.Token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JSON.toJSONString(params)))
+                .andReturn();
+
+        String responseContent = mvcResult.getResponse().getContentAsString();
+        responseContent = new String(responseContent.getBytes("ISO-8859-1"), "UTF-8");
+        System.out.println(responseContent);
+    }
+
 }

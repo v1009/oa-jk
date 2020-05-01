@@ -252,5 +252,9 @@
     </set>
     where user_id = #{userId,jdbcType=BIGINT} and status=1
   </update>
+  <!-- 删除用户 -->
+  <update id="updateToDisable" parameterType="com.ht.oa.jk.model.SUsers">
+    update s_users set status=0,last_time = #{lastTime,jdbcType=TIMESTAMP} where user_id = #{userId,jdbcType=BIGINT} and status=1
+  </update>
 
 </mapper>

@@ -48,4 +48,12 @@ public interface UserService {
      */
     boolean addRoleToUser(List<SUserRole> sUserRoleList);
 
+    /**
+     * 删除用户
+     *
+     * @param sUsers
+     * @return
+     */
+    boolean del(SUsers sUsers);
+
 }
