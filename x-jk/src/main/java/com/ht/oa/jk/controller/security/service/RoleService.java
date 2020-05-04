@@ -2,6 +2,7 @@ package com.ht.oa.jk.controller.security.service;
 
 import com.ht.oa.jk.model.SRoleResources;
 import com.ht.oa.jk.model.SRoles;
+import com.ht.oa.jk.model.req.SRolesReq;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,7 @@ public interface RoleService {
      * @param sRoles
      * @return
      */
-    int add(SRoles sRoles);
+    boolean add(SRoles sRoles);
 
     /**
      * 查询所有角色
@@ -47,7 +48,13 @@ public interface RoleService {
      */
     boolean del(SRoles sRoles);
 
-    boolean checkRoleIsEnabledDel(int roleId);
+    /**
+     * 查询角色是否已经被使用
+     *
+     * @param roleId
+     * @return
+     */
+    boolean checkRoleIsEnabledDel(long roleId);
 
     /**
      * 给角色赋资源
@@ -56,5 +63,21 @@ public interface RoleService {
      * @return
      */
     boolean addResourceToRole(List<SRoleResources> sRoleResourceList);
+
+    /**
+     * 查询角色
+     *
+     * @param sRolesReq
+     * @return
+     */
+    List<Map<String, Object>> list(SRolesReq sRolesReq);
+
+    /**
+     * 修改信息
+     *
+     * @param sRoles
+     * @return
+     */
+    boolean modify(SRoles sRoles);
 
 }

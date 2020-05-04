@@ -256,5 +256,16 @@
   <update id="updateToDisable" parameterType="com.ht.oa.jk.model.SUsers">
     update s_users set status=0,last_time = #{lastTime,jdbcType=TIMESTAMP} where user_id = #{userId,jdbcType=BIGINT} and status=1
   </update>
+  <!-- 查询用户通过userId -->
+  <select id="findModelByUserId" parameterType="java.lang.Long" resultType="java.util.Map">
+    select
+    user_id as userId,
+    user_name as userName,
+    user_phone as userPhone,
+    user_email as userEmail,
+    address as address
+    from s_users
+    where user_id = #{userId,jdbcType=BIGINT} and status=1
+  </select>
 
 </mapper>

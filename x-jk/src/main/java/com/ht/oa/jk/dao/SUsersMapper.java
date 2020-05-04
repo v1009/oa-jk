@@ -2,6 +2,7 @@ package com.ht.oa.jk.dao;
 
 import com.ht.oa.jk.model.SUsers;
 import com.ht.oa.jk.model.req.SUsersReq;
+import com.ht.oa.jk.model.resp.UserResp;
 
 import java.util.List;
 import java.util.Map;
@@ -19,10 +20,12 @@ public interface SUsersMapper extends BaseMapper {
 
     int updateByPrimaryKey(SUsers record);
 
-    List<Map<String,Object>> list(SUsersReq sUsersReq);
+    List<Map<String, Object>> list(SUsersReq sUsersReq);
 
     int modify(SUsers sUsers);
 
     int updateToDisable(SUsers sUsers);
+
+    Map<String,Object> findModelByUserId(long userId);
 
 }

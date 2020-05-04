@@ -1,6 +1,7 @@
 package com.ht.oa.jk.dao;
 
 import com.ht.oa.jk.model.SRoles;
+import com.ht.oa.jk.model.req.SRolesReq;
 
 import java.util.List;
 import java.util.Map;
@@ -22,10 +23,12 @@ public interface SRolesMapper extends BaseMapper {
 
     int queryRoleNameIsUse(SRoles sRoles);
 
-    int queryRoleIsUse(int roleId);
+    int queryRoleIsUse(long roleId);
 
     int updateToDisable(SRoles sRoles);
 
     int modify(SRoles sRoles);
+
+    List<Map<String,Object>> list(SRolesReq sRolesReq);
 
 }

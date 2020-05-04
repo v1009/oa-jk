@@ -5,6 +5,7 @@ import com.ht.oa.jk.dao.SRoleResourcesMapper;
 import com.ht.oa.jk.dao.SRolesMapper;
 import com.ht.oa.jk.model.SRoleResources;
 import com.ht.oa.jk.model.SRoles;
+import com.ht.oa.jk.model.req.SRolesReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +22,12 @@ public class RoleServiceImpl implements RoleService {
     private SRoleResourcesMapper sRoleResourcesMapper;
 
     @Override
-    public int add(SRoles sRoles) {
-        return sRolesMapper.insert(sRoles);
+    public boolean add(SRoles sRoles) {
+        int res = sRolesMapper.insert(sRoles);
+        if (res > 0) {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -32,7 +37,11 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public boolean checkRoleNameIsExist(SRoles sRoles) {
-        return sRolesMapper.queryRoleNameIsUse(sRoles) > 0;
+        int res = sRolesMapper.queryRoleNameIsUse(sRoles);
+        if (res > 0) {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -42,12 +51,20 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public boolean del(SRoles sRoles) {
-        return sRolesMapper.updateToDisable(sRoles) == 1;
+        int res = sRolesMapper.updateToDisable(sRoles);
+        if (res > 0) {
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public boolean checkRoleIsEnabledDel(int roleId) {
-        return sRolesMapper.queryRoleIsUse(roleId) == 0;
+    public boolean checkRoleIsEnabledDel(long roleId) {
+        int res = sRolesMapper.queryRoleIsUse(roleId);
+        if (res > 0) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -65,6 +82,20 @@ public class RoleServiceImpl implements RoleService {
             throw new RuntimeException("addResourceToRole:批量插入失败");
         }
         return true;
+    }
+
+    @Override
+    public List<Map<String, Object>> list(SRolesReq sRolesReq) {
+        return sRolesMapper.list(sRolesReq);
+    }
+
+    @Override
+    public boolean modify(SRoles sRoles) {
+        int res = sRolesMapper.modify(sRoles);
+        if (res > 0) {
+            return true;
+        }
+        return false;
     }
 
 }

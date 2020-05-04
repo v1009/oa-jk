@@ -127,26 +127,26 @@
   </update>
   <!-- 查询所有的角色 -->
   <select id="queryAllRoles" parameterType="com.ht.oa.jk.model.SRoles" resultType="java.util.Map">
-        select
-        role_id as roleId,
-        role_name as roleName,
-        insert_time as insertTime
-        from s_roles
-        where owner_mid = #{ownerMid,jdbcType=BIGINT} and status=1
-        order by role_id
-    </select>
+      select
+      role_id as roleId,
+      role_name as roleName,
+      insert_time as insertTime
+      from s_roles
+      where owner_mid = #{ownerMid,jdbcType=BIGINT} and status=1
+      order by role_id
+  </select>
   <!-- 查询角色名称有没有被使用 -->
   <select id="queryRoleNameIsUse" parameterType="com.ht.oa.jk.model.SRoles" resultType="java.lang.Integer">
-        select count(*) from s_roles where role_name=#{roleName} and owner_mid = #{ownerMid,jdbcType=BIGINT} and status=1
-    </select>
+      select count(*) from s_roles where role_name=#{roleName} and status=1
+  </select>
   <!-- 查询角色有没有被使用 -->
-  <select id="queryRoleIsUse" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-        select count(*) from s_user_role where role_id=#{roleId}
-    </select>
+  <select id="queryRoleIsUse" parameterType="java.lang.Long" resultType="java.lang.Integer">
+      select count(*) from s_user_role where role_id=#{roleId}
+  </select>
   <!-- 更新角色为不可用 -->
   <update id="updateToDisable" parameterType="com.ht.oa.jk.model.SRoles">
     update s_roles set status=0,update_mid = #{updateMid,jdbcType=BIGINT},last_time = #{lastTime,jdbcType=TIMESTAMP}
-    where role_id = #{roleId,jdbcType=BIGINT} and owner_mid = #{ownerMid,jdbcType=BIGINT} and status=1
+    where role_id = #{roleId,jdbcType=BIGINT} and status=1
   </update>
   <!-- 更新 -->
   <update id="modify" parameterType="com.ht.oa.jk.model.SRoles">
@@ -162,6 +162,20 @@
         update_mid = #{updateMid,jdbcType=BIGINT},
       </if>
     </set>
-    where role_id = #{roleId,jdbcType=BIGINT} and owner_mid = #{ownerMid,jdbcType=BIGINT} and status=1
+    where role_id = #{roleId,jdbcType=BIGINT} and status=1
   </update>
+  <!-- 查询角色 -->
+  <select id="list" parameterType="com.ht.oa.jk.model.req.SRolesReq" resultType="java.util.Map">
+    select
+    role_id as roleId,
+    role_name as roleName,
+    DATE_FORMAT(last_time,'%Y-%m-%d') as lastTime
+    from s_roles
+    <where>
+      <if test="roleName != null and roleName != ''">and role_name like #{roleName}</if>
+      <if test="true">and status=1</if>
+    </where>
+    order by role_id
+  </select>
+
 </mapper>

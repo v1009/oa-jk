@@ -3,13 +3,63 @@ package com.ht.oa.jk.utils.common;
 
 import com.ht.oa.jk.model.code.ResultCode;
 import com.ht.oa.jk.model.resp.CommonResponseLogin;
+import com.ht.oa.jk.model.resp.CommonResponseMulti;
 import com.ht.oa.jk.model.resp.CommonResponseSimple;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ResultUtils {
+
+    /**
+     * list返回
+     *
+     * @return
+     */
+    public static CommonResponseMulti list(List<Map<String, Object>> list) {
+        CommonResponseMulti commonResponse = new CommonResponseMulti();
+        commonResponse.setCode(ResultCode.success.code());
+        commonResponse.setData(list);
+        if (list != null && list.size() > 0) {
+            for (Map<String, Object> item : list) {
+                Set<String> keySet = item.keySet();
+                for (String key : keySet) {
+                    /**
+                     *  1，解决long精度丢失问题，转换为string
+                     *  2，值为null的情况下转化为空字符串
+                     */
+                    String value = String.valueOf(item.get(key) == null ? "" : item.get(key));
+                    item.put(key, value);
+                }
+            }
+        }
+        return commonResponse;
+    }
+
+    /**
+     * item 返回
+     *
+     * @return
+     */
+    public static CommonResponseMulti item(Map<String, Object> item) {
+        CommonResponseMulti commonResponse = new CommonResponseMulti();
+        commonResponse.setCode(ResultCode.success.code());
+        commonResponse.setData(item);
+        if (item != null) {
+            Set<String> keySet = item.keySet();
+            for (String key : keySet) {
+                /**
+                 *  1，解决long精度丢失问题，转换为string
+                 *  2，值为null的情况下转化为空字符串
+                 */
+                String value = String.valueOf(item.get(key) == null ? "" : item.get(key));
+                item.put(key, value);
+            }
+        }
+        return commonResponse;
+    }
 
     /**
      * success 返回
@@ -22,19 +72,6 @@ public class ResultUtils {
         commonResponse.setResMsg(resMsg);
         return commonResponse;
     }
-
-    /**
-     * list返回
-     *
-     * @return
-     */
-    public static Map<String, Object> list(List<Map<String, Object>> list) {
-        Map<String, Object> resMap = new HashMap<>();
-        resMap.put("code", ResultCode.success.code());
-        resMap.put("data", list);
-        return resMap;
-    }
-
 
     /**
      * 登录返回

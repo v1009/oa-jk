@@ -189,11 +189,13 @@ public class UserAction {
             long userId = reqJson.getLongValue("userId");
             String userName = reqJson.getString("userName");
             String email = reqJson.getString("email");
+            String address = reqJson.getString("address");
             Date now = DateUtils.getNowDate();
             SUsers sUsers = new SUsers();
             sUsers.setUserId(userId);
             sUsers.setUserName(userName);
             sUsers.setUserEmail(email);
+            sUsers.setAddress(address);
             sUsers.setLastTime(now);
             sUsers.setStatus(1);
             boolean boo = userService.modify(sUsers);
@@ -256,6 +258,48 @@ public class UserAction {
         } catch (Exception e) {
             e.printStackTrace();
             LogUtils.error("UserAction%del", e);
+            return ResultUtils.exception();
+        }
+    }
+
+    /**
+     * 查询用户信息通过用户id
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/findModelByUserId")
+    @ResponseBody
+    public Object findModelByUserId(HttpServletRequest request, HttpServletResponse response) {
+        ServletInputStream in = null;
+        try {
+            in = request.getInputStream();
+            StringBuilder requestMsg = new StringBuilder();
+            byte[] b = new byte[4096];
+            int l;
+            while ((l = in.read(b)) != -1) {
+                requestMsg.append(new String(b, 0, l, "UTF-8"));
+            }
+            if (StringUtils.isBlank(requestMsg.toString())) {
+                return ResultUtils.paramNoPass("参数必传");
+            }
+            LogUtils.error(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            String accessToken = AuthTools.getToken(request);
+            if (StringUtils.isBlank(accessToken)) {
+                return ResultUtils.paramNoPass("accessToken不能为空");
+            }
+            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
+            if (cacheMember == null) {
+                return ResultUtils.login();
+            }
+            long userId = reqJson.getLongValue("userId");
+            Map<String, Object> user = userService.queryModelByUserId(userId);
+            return ResultUtils.item(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtils.error("UserAction%findModelByUserId", e);
             return ResultUtils.exception();
         }
     }

@@ -56,4 +56,12 @@ public interface UserService {
      */
     boolean del(SUsers sUsers);
 
+    /**
+     * 查询用户通过userId
+     *
+     * @param userId
+     * @return
+     */
+    Map<String, Object> queryModelByUserId(long userId);
+
 }

@@ -1,13 +1,24 @@
 package com.ht.oa.jk.controller.security.action;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.ht.oa.jk.controller.security.service.RoleService;
 import com.ht.oa.jk.model.SRoleResources;
 import com.ht.oa.jk.model.SRoles;
+import com.ht.oa.jk.model.SUsers;
 import com.ht.oa.jk.model.code.ResultCode;
+import com.ht.oa.jk.model.req.SRolesReq;
+import com.ht.oa.jk.model.req.SUsersReq;
 import com.ht.oa.jk.model.resp.CommonResponse;
+import com.ht.oa.jk.utils.auth.AuthTools;
+import com.ht.oa.jk.utils.cache.CacheMember;
+import com.ht.oa.jk.utils.cache.MemberCacheUtils;
 import com.ht.oa.jk.utils.common.DateUtils;
 import com.ht.oa.jk.utils.common.ResultUtils;
+import com.ht.oa.jk.utils.common.StringUtils;
+import com.ht.oa.jk.utils.crypto.PwdUtils;
 import com.ht.oa.jk.utils.log.LogUtils;
+import com.ht.oa.jk.utils.seq.IdWorker;
 import com.ht.oa.jk.utils.sso.SsoApiUtils;
 import com.ht.oa.jk.utils.system.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +27,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -30,163 +42,232 @@ public class RoleAction {
     @Autowired
     private RoleService roleService;
 
-    @RequestMapping("/show")
+    /**
+     * 查询用户数据
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping("/list")
     @ResponseBody
-    public Object show(HttpServletRequest request, HttpServletResponse response, SRoles sRoles) {
-        CommonResponse commonResponse = new CommonResponse();
+    public Object list(HttpServletRequest request, HttpServletResponse response) {
+        ServletInputStream in = null;
         try {
-            //获取访问系统信息
-            String token = SystemUtils.getRequestToken(request);
-            long ownerMid = SsoApiUtils.getSystemOwnerId(token);
-            if (ownerMid == 0) {
+            in = request.getInputStream();
+            StringBuilder requestMsg = new StringBuilder();
+            byte[] b = new byte[4096];
+            int l;
+            while ((l = in.read(b)) != -1) {
+                requestMsg.append(new String(b, 0, l, "UTF-8"));
+            }
+            if (StringUtils.isBlank(requestMsg.toString())) {
+                return ResultUtils.paramNoPass("参数必传");
+            }
+            LogUtils.error(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            String accessToken = AuthTools.getToken(request);
+            if (StringUtils.isBlank(accessToken)) {
+                return ResultUtils.paramNoPass("accessToken不能为空");
+            }
+            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
+            if (cacheMember == null) {
                 return ResultUtils.login();
             }
-            sRoles.setOwnerMid(ownerMid);
-            List<Map<String, Object>> list = roleService.queryAllRoles(sRoles);
-            commonResponse.setData(list);
-            commonResponse.setCode(ResultCode.success.code());
+            String roleName = reqJson.getString("roleName");
+            Integer page = reqJson.getInteger("page");
+            if (page == null) {
+                page = 1;
+            }
+            SRolesReq sRolesReq = new SRolesReq();
+            sRolesReq.setPage(page);
+            sRolesReq.setRoleName(roleName);
+            List<Map<String, Object>> list = roleService.list(sRolesReq);
+            return ResultUtils.list(list);
         } catch (Exception e) {
             e.printStackTrace();
-            commonResponse.setCode(ResultCode.failure.code());
-            commonResponse.setResMsg(ResultCode.failure.desc());
-            LogUtils.error("RoleAction%show", e);
+            LogUtils.error("RoleAction%list", e);
+            return ResultUtils.exception();
         }
-        return commonResponse;
     }
 
     /**
      * 添加角色
+     *
+     * @param request
+     * @param response
+     * @return
      */
     @RequestMapping("/add")
     @ResponseBody
-    public Object add(SRoles model, HttpServletRequest request, HttpServletResponse response) {
-        CommonResponse commonResponse = new CommonResponse();
+    public Object add(HttpServletRequest request, HttpServletResponse response) {
+        ServletInputStream in = null;
         try {
-            long mid = SystemUtils.getMid(request);
-            //获取访问系统信息
-            String token = SystemUtils.getRequestToken(request);
-            long ownerMid = SsoApiUtils.getSystemOwnerId(token);
-            if (ownerMid == 0) {
+            in = request.getInputStream();
+            StringBuilder requestMsg = new StringBuilder();
+            byte[] b = new byte[4096];
+            int l;
+            while ((l = in.read(b)) != -1) {
+                requestMsg.append(new String(b, 0, l, "UTF-8"));
+            }
+            if (StringUtils.isBlank(requestMsg.toString())) {
+                return ResultUtils.paramNoPass("参数必传");
+            }
+            LogUtils.error(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            String accessToken = AuthTools.getToken(request);
+            if (StringUtils.isBlank(accessToken)) {
+                return ResultUtils.paramNoPass("accessToken不能为空");
+            }
+            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
+            if (cacheMember == null) {
                 return ResultUtils.login();
             }
-
+            long mid = cacheMember.getMid();
+            String roleName = reqJson.getString("roleName");
             Date now = DateUtils.getNowDate();
-            model.setInsertTime(now);
-            model.setLastTime(now);
-            model.setStatus(1);
-            model.setAddMid(mid);
-            model.setUpdateMid(mid);
-            model.setOwnerMid(ownerMid);
-            int res = roleService.add(model);
-            if (res > 0) {
-                commonResponse.setCode(ResultCode.success.code());
-                commonResponse.setResMsg("保存成功");
+            SRoles sRoles = new SRoles();
+            sRoles.setRoleId(IdWorker.nextId());
+            sRoles.setRoleName(roleName);
+            sRoles.setInsertTime(now);
+            sRoles.setLastTime(now);
+            sRoles.setStatus(1);
+            sRoles.setAddMid(mid);
+            sRoles.setUpdateMid(mid);
+            sRoles.setOwnerMid(0L);
+            boolean boo = roleService.add(sRoles);
+            if (boo) {
+                return ResultUtils.success("添加成功");
             } else {
-                commonResponse.setCode(ResultCode.busiError.code());
-                commonResponse.setResMsg(ResultCode.busiError.desc());
+                return ResultUtils.busiFail("添加失败");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            commonResponse.setCode(ResultCode.failure.code());
-            commonResponse.setResMsg(ResultCode.failure.desc());
             LogUtils.error("RoleAction%add", e);
+            return ResultUtils.exception();
         }
-        return commonResponse;
     }
 
     /**
-     * 修改角色
+     * 修改用户信息
+     *
+     * @param request
+     * @param response
+     * @return
      */
     @RequestMapping("/modify")
     @ResponseBody
-    public Object modify(SRoles sRoles, HttpServletRequest request, HttpServletResponse response) {
-        CommonResponse commonResponse = new CommonResponse();
+    public Object modify(HttpServletRequest request, HttpServletResponse response) {
+        ServletInputStream in = null;
         try {
-            long mid = SystemUtils.getMid(request);
-            //获取访问系统信息
-            String token = SystemUtils.getRequestToken(request);
-            long ownerMid = SsoApiUtils.getSystemOwnerId(token);
-            if (ownerMid == 0) {
+            in = request.getInputStream();
+            StringBuilder requestMsg = new StringBuilder();
+            byte[] b = new byte[4096];
+            int l;
+            while ((l = in.read(b)) != -1) {
+                requestMsg.append(new String(b, 0, l, "UTF-8"));
+            }
+            if (StringUtils.isBlank(requestMsg.toString())) {
+                return ResultUtils.paramNoPass("参数必传");
+            }
+            LogUtils.error(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            String accessToken = AuthTools.getToken(request);
+            if (StringUtils.isBlank(accessToken)) {
+                return ResultUtils.paramNoPass("accessToken不能为空");
+            }
+            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
+            if (cacheMember == null) {
                 return ResultUtils.login();
             }
-
-            sRoles.setOwnerMid(ownerMid);
-            //检查角色是否可删除
-            if (roleService.checkRoleNameIsExist(sRoles)) {
-                commonResponse.setCode(ResultCode.busiError.code());
-                commonResponse.setResMsg("该角色名称已经被使用,请输入其他名称！");
-                return commonResponse;
-            }
-            Date now = new Date();
+            long mid = cacheMember.getMid();
+            long roleId = reqJson.getLongValue("roleId");
+            String roleName = reqJson.getString("roleName");
+            Date now = DateUtils.getNowDate();
+            SRoles sRoles = new SRoles();
+            sRoles.setRoleId(roleId);
+            sRoles.setRoleName(roleName);
             sRoles.setLastTime(now);
+            sRoles.setStatus(1);
             sRoles.setUpdateMid(mid);
-            boolean boo = roleService.update(sRoles);
+            //检查角色名称是否被使用
+            if (roleService.checkRoleNameIsExist(sRoles)) {
+                return ResultUtils.paramNoPass("该角色名称已经被使用,请输入其他名称");
+            }
+            boolean boo = roleService.modify(sRoles);
             if (boo) {
-                commonResponse.setCode(ResultCode.success.code());
-                commonResponse.setResMsg("修改成功");
+                return ResultUtils.success("修改成功");
             } else {
-                commonResponse.setCode(ResultCode.busiError.code());
-                commonResponse.setResMsg(ResultCode.busiError.desc());
+                return ResultUtils.busiFail("修改失败");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            commonResponse.setCode(ResultCode.failure.code());
-            commonResponse.setResMsg(ResultCode.failure.desc());
             LogUtils.error("RoleAction%modify", e);
+            return ResultUtils.exception();
         }
-        return commonResponse;
     }
 
     /**
-     * 删除角色
+     * 删除用户
+     *
+     * @param request
+     * @param response
+     * @return
      */
     @RequestMapping("/del")
     @ResponseBody
     public Object del(HttpServletRequest request, HttpServletResponse response) {
-        String rId = request.getParameter("rId");
-        CommonResponse commonResponse = new CommonResponse();
+        ServletInputStream in = null;
         try {
-            //检查角色是否可删除
-            if (!roleService.checkRoleIsEnabledDel(Integer.parseInt(rId))) {
-                commonResponse.setCode(ResultCode.busiError.code());
-                commonResponse.setResMsg("该角色已经被使用，不能删除！");
-                return commonResponse;
+            in = request.getInputStream();
+            StringBuilder requestMsg = new StringBuilder();
+            byte[] b = new byte[4096];
+            int l;
+            while ((l = in.read(b)) != -1) {
+                requestMsg.append(new String(b, 0, l, "UTF-8"));
             }
-            long mid = SystemUtils.getMid(request);
-            //获取访问系统信息
-            String token = SystemUtils.getRequestToken(request);
-            long ownerMid = SsoApiUtils.getSystemOwnerId(token);
-            if (ownerMid == 0) {
+            if (StringUtils.isBlank(requestMsg.toString())) {
+                return ResultUtils.paramNoPass("参数必传");
+            }
+            LogUtils.error(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            String accessToken = AuthTools.getToken(request);
+            if (StringUtils.isBlank(accessToken)) {
+                return ResultUtils.paramNoPass("accessToken不能为空");
+            }
+            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
+            if (cacheMember == null) {
                 return ResultUtils.login();
             }
-
+            long mid = cacheMember.getMid();
+            long roleId = reqJson.getLongValue("roleId");
+            //检查角色是否可删除
+            if (!roleService.checkRoleIsEnabledDel(roleId)) {
+                return ResultUtils.paramNoPass("该角色已经被使用，不能删除");
+            }
             Date now = DateUtils.getNowDate();
             SRoles sRoles = new SRoles();
-            sRoles.setRoleId(Long.parseLong(rId));
+            sRoles.setRoleId(roleId);
             sRoles.setLastTime(now);
+            sRoles.setStatus(1);
             sRoles.setUpdateMid(mid);
-            sRoles.setOwnerMid(ownerMid);
             boolean boo = roleService.del(sRoles);
             if (boo) {
-                commonResponse.setCode(ResultCode.success.code());
-                commonResponse.setResMsg("删除成功");
+                return ResultUtils.success("删除成功");
             } else {
-                commonResponse.setCode(ResultCode.busiError.code());
-                commonResponse.setResMsg(ResultCode.busiError.desc());
+                return ResultUtils.busiFail("删除失败");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            commonResponse.setCode(ResultCode.failure.code());
-            commonResponse.setResMsg(ResultCode.failure.desc());
             LogUtils.error("RoleAction%del", e);
+            return ResultUtils.exception();
         }
-        return commonResponse;
     }
 
     /**
      * 添加权限到角色
      */
-    @RequestMapping("/addResourceToRole.htm")
+    @RequestMapping("/addResourceToRole")
     @ResponseBody
     public Object addResourceToRole(HttpServletRequest request, HttpServletResponse response) {
         String roleId = request.getParameter("roleId");
