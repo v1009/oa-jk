@@ -1,12 +1,11 @@
 package com.ht.oa.jk.utils.common;
 
 
-import com.ht.oa.jk.model.code.ResultCode;
+import com.ht.oa.jk.utils.code.ResultCode;
 import com.ht.oa.jk.model.resp.CommonResponseLogin;
 import com.ht.oa.jk.model.resp.CommonResponseMulti;
 import com.ht.oa.jk.model.resp.CommonResponseSimple;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -62,6 +61,18 @@ public class ResultUtils {
     }
 
     /**
+     * model 返回
+     *
+     * @return
+     */
+    public static CommonResponseMulti model(Object data) {
+        CommonResponseMulti commonResponse = new CommonResponseMulti();
+        commonResponse.setCode(ResultCode.success.code());
+        commonResponse.setData(data);
+        return commonResponse;
+    }
+
+    /**
      * success 返回
      *
      * @return
@@ -109,7 +120,7 @@ public class ResultUtils {
     }
 
     /**
-     * 失败返回
+     * 异常返回
      *
      * @return
      */

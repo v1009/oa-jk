@@ -2,8 +2,7 @@ package com.ht.oa.jk.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.ht.oa.jk.model.code.ResultCode;
-import com.ht.oa.jk.model.resp.CommonResponseSimple;
+import com.ht.oa.jk.utils.code.ResultCode;
 import com.ht.oa.jk.utils.auth.LoginCheckUtils;
 import com.ht.oa.jk.utils.cache.CacheMember;
 import com.ht.oa.jk.utils.cache.RedisCacheFactory;

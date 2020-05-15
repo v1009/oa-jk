@@ -1,13 +1,11 @@
 package com.ht.oa.jk.controller.security.action;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ht.oa.jk.controller.security.service.UserService;
 import com.ht.oa.jk.model.SUserRole;
 import com.ht.oa.jk.model.SUsers;
-import com.ht.oa.jk.model.code.ResultCode;
-import com.ht.oa.jk.model.req.HtDailyReq;
+import com.ht.oa.jk.utils.code.ResultCode;
 import com.ht.oa.jk.model.req.SUsersReq;
 import com.ht.oa.jk.model.resp.CommonResponse;
 import com.ht.oa.jk.utils.auth.AuthTools;
@@ -30,7 +28,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.Result;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

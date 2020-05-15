@@ -1,16 +1,20 @@
 package com.ht.oa.jk.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 import java.io.Serializable;
 import java.util.List;
 
 public class TreeMenu implements Serializable {
 
-    private long id;
-    private long parentId;
-    private String text;
-    private String code;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long parentId;
+    private String label;
     private String iconCls = "sysMenuIcon";
-    private String hrefTarget;
+    private String path;
     private String description;
     private boolean leaf;
     private int priority;
@@ -18,36 +22,28 @@ public class TreeMenu implements Serializable {
 
     private List<TreeMenu> children;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public long getParentId() {
+    public Long getParentId() {
         return parentId;
     }
 
-    public void setParentId(long parentId) {
+    public void setParentId(Long parentId) {
         this.parentId = parentId;
     }
 
-    public String getText() {
-        return text;
+    public String getLabel() {
+        return label;
     }
 
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public String getIconCls() {
@@ -58,12 +54,12 @@ public class TreeMenu implements Serializable {
         this.iconCls = iconCls;
     }
 
-    public String getHrefTarget() {
-        return hrefTarget;
+    public String getPath() {
+        return path;
     }
 
-    public void setHrefTarget(String hrefTarget) {
-        this.hrefTarget = hrefTarget;
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getDescription() {
@@ -82,14 +78,6 @@ public class TreeMenu implements Serializable {
         this.leaf = leaf;
     }
 
-    public List<TreeMenu> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<TreeMenu> children) {
-        this.children = children;
-    }
-
     public int getPriority() {
         return priority;
     }
@@ -106,4 +94,11 @@ public class TreeMenu implements Serializable {
         this.checked = checked;
     }
 
+    public List<TreeMenu> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<TreeMenu> children) {
+        this.children = children;
+    }
 }

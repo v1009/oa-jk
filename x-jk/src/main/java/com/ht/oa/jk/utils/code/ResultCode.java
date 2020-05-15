@@ -1,4 +1,4 @@
-package com.ht.oa.jk.model.code;
+package com.ht.oa.jk.utils.code;
 
 public enum ResultCode {
 

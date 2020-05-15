@@ -22,9 +22,9 @@
         </commentGenerator>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://106.14.9.112:3309/ht_oa"
-                        userId="ht_system"
-                        password="ht@123@">
+                        connectionURL="jdbc:mysql://114.67.108.26:3309/ht_oa"
+                        userId="ht_oa"
+                        password="D@2343Cttgvvcssc">
         </jdbcConnection>
 
         <javaModelGenerator targetPackage="com.ht.oa.jk.model" targetProject="src/main/java">
@@ -42,7 +42,7 @@
             <property name="rootInterface" value="com.ht.oa.jk.dao.BaseMapper"/>
         </javaClientGenerator>
 
-        <table schema="" tableName="s_users" domainObjectName="SUsers"
+        <table schema="" tableName="s_menu" domainObjectName="SMenu"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
