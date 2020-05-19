@@ -120,22 +120,18 @@ public class MenuAction {
                 return ResultUtils.login();
             }
             long id = reqJson.getLongValue("id");
-            long parentId = reqJson.getLongValue("parentId");
             String name = reqJson.getString("name");
             String path = reqJson.getString("path");
             String desc = reqJson.getString("desc");
             String icon = reqJson.getString("icon");
-            int leaf = reqJson.getIntValue("leaf");
             Date now = DateUtils.getNowDate();
             SMenu menu = new SMenu();
             menu.setMenuId(id);
-            menu.setParentId(parentId);
             menu.setMenuName(name);
             menu.setMenuType(1);
             menu.setMenuPath(path);
             menu.setMenuDesc(desc);
             menu.setIcon(icon);
-            menu.setLeaf(leaf);
             menu.setInsertTime(now);
             menu.setLastTime(now);
             menu.setStatus(1);

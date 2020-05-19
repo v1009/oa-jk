@@ -35,6 +35,9 @@ public class MenuServiceImpl implements MenuService {
             sMenuMapper.updateLeafByMenuId(parentId);
         }
         Integer lastPriority = sMenuMapper.queryLastChildPriorityByParentId(parentId);
+        if (lastPriority == null) {
+            lastPriority = 0;
+        }
         model.setPriority(lastPriority + 1);
         int res = sMenuMapper.insert(model);
         if (res > 0) {
