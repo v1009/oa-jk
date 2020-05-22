@@ -71,13 +71,14 @@ public class DailyAction {
             if (page == null) {
                 page = 1;
             }
-            Integer dailyDateNum = reqJson.getInteger("dailyDate");
-            if (dailyDateNum == null) {
-                dailyDateNum = DateUtils.getYMdToNum();
-            }
             HtDailyReq htDailyReq = new HtDailyReq();
+            Integer dailyDateNum = reqJson.getInteger("dailyDate");
+            String userName = reqJson.getString("userName");
+            if (dailyDateNum != null) {
+                htDailyReq.setDailyDateNum(dailyDateNum);
+            }
             htDailyReq.setPage(page);
-            htDailyReq.setDailyDateNum(dailyDateNum);
+            htDailyReq.setUserName(userName);
             List<Map<String, Object>> list = dailyService.list(htDailyReq);
             return ResultUtils.list(list);
         } catch (Exception e) {

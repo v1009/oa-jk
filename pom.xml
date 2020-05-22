@@ -14,4 +14,9 @@
     <name>oa</name>
     <description>Demo project for Spring Boot</description>
 
+    <modules>
+        <module>x-jk</module>
+        <module>x-manage</module>
+    </modules>
+
 </project>
