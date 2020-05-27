@@ -2,26 +2,27 @@ package com.ht.oa.jk.controller.security.action;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.ht.oa.jk.config.ApiDesc;
 import com.ht.oa.jk.controller.security.service.RoleService;
 import com.ht.oa.jk.model.SRoleResources;
 import com.ht.oa.jk.model.SRoles;
-import com.ht.oa.jk.utils.code.ResultCode;
 import com.ht.oa.jk.model.req.SRolesReq;
 import com.ht.oa.jk.model.resp.CommonResponse;
 import com.ht.oa.jk.utils.auth.AuthTools;
 import com.ht.oa.jk.utils.cache.CacheMember;
 import com.ht.oa.jk.utils.cache.MemberCacheUtils;
+import com.ht.oa.jk.utils.code.ResultCode;
 import com.ht.oa.jk.utils.common.DateUtils;
 import com.ht.oa.jk.utils.common.ResultUtils;
 import com.ht.oa.jk.utils.common.StringUtils;
 import com.ht.oa.jk.utils.log.LogUtils;
 import com.ht.oa.jk.utils.seq.IdWorker;
-import com.ht.oa.jk.utils.sso.SsoApiUtils;
+import com.ht.oa.jk.utils.sso.ApiUtils;
 import com.ht.oa.jk.utils.system.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.ServletInputStream;
@@ -39,14 +40,8 @@ public class RoleAction {
     @Autowired
     private RoleService roleService;
 
-    /**
-     * 查询用户数据
-     *
-     * @param request
-     * @param response
-     * @return
-     */
-    @RequestMapping("/list")
+    @ApiDesc(code = "/list", name = "查询角色列表")
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
     public Object list(HttpServletRequest request, HttpServletResponse response) {
         ServletInputStream in = null;
@@ -88,14 +83,8 @@ public class RoleAction {
         }
     }
 
-    /**
-     * 添加角色
-     *
-     * @param request
-     * @param response
-     * @return
-     */
-    @RequestMapping("/add")
+    @ApiDesc(code = "/add", name = "添加角色")
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public Object add(HttpServletRequest request, HttpServletResponse response) {
         ServletInputStream in = null;
@@ -145,14 +134,8 @@ public class RoleAction {
         }
     }
 
-    /**
-     * 修改用户信息
-     *
-     * @param request
-     * @param response
-     * @return
-     */
-    @RequestMapping("/modify")
+    @ApiDesc(code = "/modify", name = "修改角色信息")
+    @RequestMapping(value = "/modify", method = RequestMethod.POST)
     @ResponseBody
     public Object modify(HttpServletRequest request, HttpServletResponse response) {
         ServletInputStream in = null;
@@ -204,14 +187,8 @@ public class RoleAction {
         }
     }
 
-    /**
-     * 删除用户
-     *
-     * @param request
-     * @param response
-     * @return
-     */
-    @RequestMapping("/del")
+    @ApiDesc(code = "/del", name = "删除角色")
+    @RequestMapping(value = "/del", method = RequestMethod.POST)
     @ResponseBody
     public Object del(HttpServletRequest request, HttpServletResponse response) {
         ServletInputStream in = null;
@@ -261,10 +238,8 @@ public class RoleAction {
         }
     }
 
-    /**
-     * 添加权限到角色
-     */
-    @RequestMapping("/addResourceToRole")
+    @ApiDesc(code = "/addResourceToRole", name = "添加权限到角色")
+    @RequestMapping(value = "/addResourceToRole", method = RequestMethod.POST)
     @ResponseBody
     public Object addResourceToRole(HttpServletRequest request, HttpServletResponse response) {
         String roleId = request.getParameter("roleId");
@@ -279,7 +254,7 @@ public class RoleAction {
             long mid = SystemUtils.getMid(request);
             //获取访问系统信息
             String token = SystemUtils.getRequestToken(request);
-            long ownerMid = SsoApiUtils.getSystemOwnerId(token);
+            long ownerMid = ApiUtils.getSystemOwnerId(token);
             if (ownerMid == 0) {
                 return ResultUtils.login();
             }
@@ -312,16 +287,5 @@ public class RoleAction {
         }
         return commonResponse;
     }
-
-    /**
-     * 选择菜单界面
-     */
-    @RequestMapping("/selectMenu.htm")
-    public String selectMenu(HttpServletRequest request, ModelMap modelMap) {
-        String roleId = request.getParameter("roleId");
-        modelMap.put("roleId", roleId);
-        return "security/role/select_menu";
-    }
-
 
 }

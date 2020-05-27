@@ -5,9 +5,9 @@ import com.alibaba.fastjson.JSON;
 public class MemberCacheUtils {
 
     /**
-     * 添加用户到缓存
+     * 登录成功，设置缓存
      */
-    public static void setCacheMember(String accessToken, CacheMember cacheMember) {
+    public static void login(String accessToken, CacheMember cacheMember) {
         RedisCacheFactory.setString(accessToken, 3600 * 24 * 30, JSON.toJSONString(cacheMember));
     }
 
@@ -22,5 +22,11 @@ public class MemberCacheUtils {
         return JSON.parseObject(member, CacheMember.class);
     }
 
+    /**
+     * 退出登录，清除缓存
+     */
+    public static void logout(String accessToken) {
+        RedisCacheFactory.removeKey(accessToken);
+    }
 
 }

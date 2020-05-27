@@ -3,6 +3,7 @@ package com.ht.oa.jk.controller;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.ht.oa.jk.config.ApiDesc;
 import com.ht.oa.jk.config.ConfigParam;
 import com.ht.oa.jk.model.req.HtDailyReq;
 import com.ht.oa.jk.pojo.HtDailyData;
@@ -19,13 +20,13 @@ import com.ht.oa.jk.utils.log.LogUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -39,10 +40,8 @@ public class DailyAction {
     @Autowired
     private DailyService dailyService;
 
-    /***
-     * 查询日报列表
-     */
-    @RequestMapping("/list")
+    @ApiDesc(code = "/list", name = "查询日报列表")
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
     public Object list(HttpServletRequest request, HttpServletResponse response) {
         ServletInputStream in = null;
@@ -88,10 +87,8 @@ public class DailyAction {
         }
     }
 
-    /**
-     * 导出的日报
-     */
-    @RequestMapping("/exportDaily")
+    @ApiDesc(code = "/exportDaily", name = "导出的日报")
+    @RequestMapping(value = "/exportDaily", method = RequestMethod.GET)
     public void exportDaily(HttpServletRequest request, HttpServletResponse response) {
         String day = request.getParameter("day");
         try {

@@ -1,13 +1,8 @@
 package com.ht.oa.jk.utils.sso;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.ht.oa.jk.config.ConfigParam;
 import com.ht.oa.jk.utils.cache.CacheMember;
-import com.ht.oa.jk.utils.common.StringUtils;
-import com.ht.oa.jk.utils.http.HttpClientUtil;
 
-public class SsoApiUtils {
+public class ApiUtils {
 
     private static String accessToken = null;
 
@@ -34,7 +29,7 @@ public class SsoApiUtils {
      * @return
      */
     public static long getSystemOwnerId(String token) {
-        return 1L;
+        return 0L;
     }
 
     /**
