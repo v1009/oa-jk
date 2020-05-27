@@ -11,6 +11,7 @@ import java.util.TimeZone;
 @SpringBootApplication
 @MapperScan("com.ht.oa.jk.dao")
 @EnableTransactionManagement
+@ServletComponentScan(basePackages = "com.ht.oa.jk.utils")
 public class JkApplication {
 
     public static void main(String[] args) {

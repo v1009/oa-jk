@@ -6,9 +6,6 @@ import com.ht.oa.jk.config.ApiDesc;
 import com.ht.oa.jk.controller.security.service.MenuService;
 import com.ht.oa.jk.model.SMenu;
 import com.ht.oa.jk.model.TreeMenu;
-import com.ht.oa.jk.utils.auth.AuthTools;
-import com.ht.oa.jk.utils.cache.CacheMember;
-import com.ht.oa.jk.utils.cache.MemberCacheUtils;
 import com.ht.oa.jk.utils.common.DateUtils;
 import com.ht.oa.jk.utils.common.ResultUtils;
 import com.ht.oa.jk.utils.common.StringUtils;
@@ -47,18 +44,10 @@ public class MenuAction {
                 requestMsg.append(new String(b, 0, l, "UTF-8"));
             }
             if (StringUtils.isBlank(requestMsg.toString())) {
-                return ResultUtils.paramNoPass("参数必传");
+                return ResultUtils.param("参数必传");
             }
             LogUtils.error(requestMsg.toString());
             JSONObject reqJson = JSON.parseObject(requestMsg.toString());
-            String accessToken = AuthTools.getToken(request);
-            if (StringUtils.isBlank(accessToken)) {
-                return ResultUtils.paramNoPass("accessToken不能为空");
-            }
-            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
-            if (cacheMember == null) {
-                return ResultUtils.login();
-            }
             long parentId = reqJson.getLongValue("parentId");
             String name = reqJson.getString("name");
             String path = reqJson.getString("path");
@@ -104,18 +93,10 @@ public class MenuAction {
                 requestMsg.append(new String(b, 0, l, "UTF-8"));
             }
             if (StringUtils.isBlank(requestMsg.toString())) {
-                return ResultUtils.paramNoPass("参数必传");
+                return ResultUtils.param("参数必传");
             }
             LogUtils.error(requestMsg.toString());
             JSONObject reqJson = JSON.parseObject(requestMsg.toString());
-            String accessToken = AuthTools.getToken(request);
-            if (StringUtils.isBlank(accessToken)) {
-                return ResultUtils.paramNoPass("accessToken不能为空");
-            }
-            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
-            if (cacheMember == null) {
-                return ResultUtils.login();
-            }
             long id = reqJson.getLongValue("id");
             String name = reqJson.getString("name");
             String path = reqJson.getString("path");
@@ -159,18 +140,10 @@ public class MenuAction {
                 requestMsg.append(new String(b, 0, l, "UTF-8"));
             }
             if (StringUtils.isBlank(requestMsg.toString())) {
-                return ResultUtils.paramNoPass("参数必传");
+                return ResultUtils.param("参数必传");
             }
             LogUtils.error(requestMsg.toString());
             JSONObject reqJson = JSON.parseObject(requestMsg.toString());
-            String accessToken = AuthTools.getToken(request);
-            if (StringUtils.isBlank(accessToken)) {
-                return ResultUtils.paramNoPass("accessToken不能为空");
-            }
-            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
-            if (cacheMember == null) {
-                return ResultUtils.login();
-            }
             long userId = reqJson.getLongValue("userId");
             List<SMenu> list = menuService.getAllResources(userId);
             TreeMenu root = new TreeMenu();
@@ -204,18 +177,9 @@ public class MenuAction {
                 requestMsg.append(new String(b, 0, l, "UTF-8"));
             }
             if (StringUtils.isBlank(requestMsg.toString())) {
-                return ResultUtils.paramNoPass("参数必传");
+                return ResultUtils.param("参数必传");
             }
             LogUtils.error(requestMsg.toString());
-            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
-            String accessToken = AuthTools.getToken(request);
-            if (StringUtils.isBlank(accessToken)) {
-                return ResultUtils.paramNoPass("accessToken不能为空");
-            }
-            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
-            if (cacheMember == null) {
-                return ResultUtils.login();
-            }
             List<SMenu> list = menuService.getAllResources();
             TreeMenu root = new TreeMenu();
             root.setLeaf(false);
@@ -316,18 +280,10 @@ public class MenuAction {
                 requestMsg.append(new String(b, 0, l, "UTF-8"));
             }
             if (StringUtils.isBlank(requestMsg.toString())) {
-                return ResultUtils.paramNoPass("参数必传");
+                return ResultUtils.param("参数必传");
             }
             LogUtils.error(requestMsg.toString());
             JSONObject reqJson = JSON.parseObject(requestMsg.toString());
-            String accessToken = AuthTools.getToken(request);
-            if (StringUtils.isBlank(accessToken)) {
-                return ResultUtils.paramNoPass("accessToken不能为空");
-            }
-            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
-            if (cacheMember == null) {
-                return ResultUtils.login();
-            }
             long roleId = reqJson.getLongValue("roleId");
             List<SMenu> list = menuService.getResourcesByRoleId(roleId);
             TreeMenu root = new TreeMenu();
@@ -361,18 +317,10 @@ public class MenuAction {
                 requestMsg.append(new String(b, 0, l, "UTF-8"));
             }
             if (StringUtils.isBlank(requestMsg.toString())) {
-                return ResultUtils.paramNoPass("参数必传");
+                return ResultUtils.param("参数必传");
             }
             LogUtils.error(requestMsg.toString());
             JSONObject reqJson = JSON.parseObject(requestMsg.toString());
-            String accessToken = AuthTools.getToken(request);
-            if (StringUtils.isBlank(accessToken)) {
-                return ResultUtils.paramNoPass("accessToken不能为空");
-            }
-            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
-            if (cacheMember == null) {
-                return ResultUtils.login();
-            }
             long id = reqJson.getLongValue("id");
             Date now = DateUtils.getNowDate();
             SMenu sMenu = new SMenu();
@@ -405,18 +353,10 @@ public class MenuAction {
                 requestMsg.append(new String(b, 0, l, "UTF-8"));
             }
             if (StringUtils.isBlank(requestMsg.toString())) {
-                return ResultUtils.paramNoPass("参数必传");
+                return ResultUtils.param("参数必传");
             }
             LogUtils.error(requestMsg.toString());
             JSONObject reqJson = JSON.parseObject(requestMsg.toString());
-            String accessToken = AuthTools.getToken(request);
-            if (StringUtils.isBlank(accessToken)) {
-                return ResultUtils.paramNoPass("accessToken不能为空");
-            }
-            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
-            if (cacheMember == null) {
-                return ResultUtils.login();
-            }
             long id = reqJson.getLongValue("id");
             Date now = DateUtils.getNowDate();
             SMenu sMenu = new SMenu();

@@ -7,19 +7,15 @@ import com.ht.oa.jk.controller.security.service.UserService;
 import com.ht.oa.jk.model.SUserRole;
 import com.ht.oa.jk.model.SUsers;
 import com.ht.oa.jk.model.req.SUsersReq;
-import com.ht.oa.jk.model.resp.CommonResponse;
-import com.ht.oa.jk.utils.auth.AuthTools;
 import com.ht.oa.jk.utils.cache.CacheMember;
 import com.ht.oa.jk.utils.cache.MemberCacheUtils;
-import com.ht.oa.jk.utils.code.ResultCode;
 import com.ht.oa.jk.utils.common.DateUtils;
 import com.ht.oa.jk.utils.common.ResultUtils;
 import com.ht.oa.jk.utils.common.StringUtils;
 import com.ht.oa.jk.utils.crypto.PwdUtils;
 import com.ht.oa.jk.utils.log.LogUtils;
 import com.ht.oa.jk.utils.seq.IdWorker;
-import com.ht.oa.jk.utils.sso.ApiUtils;
-import com.ht.oa.jk.utils.system.SystemUtils;
+import com.ht.oa.jk.utils.system.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,18 +51,10 @@ public class UserAction {
                 requestMsg.append(new String(b, 0, l, "UTF-8"));
             }
             if (StringUtils.isBlank(requestMsg.toString())) {
-                return ResultUtils.paramNoPass("参数必传");
+                return ResultUtils.param("参数必传");
             }
             LogUtils.error(requestMsg.toString());
             JSONObject reqJson = JSON.parseObject(requestMsg.toString());
-            String accessToken = AuthTools.getToken(request);
-            if (StringUtils.isBlank(accessToken)) {
-                return ResultUtils.paramNoPass("accessToken不能为空");
-            }
-            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
-            if (cacheMember == null) {
-                return ResultUtils.login();
-            }
             String mobile = reqJson.getString("mobile");
             String pwd = reqJson.getString("pwd");
             String userName = reqJson.getString("userName");
@@ -113,18 +101,10 @@ public class UserAction {
                 requestMsg.append(new String(b, 0, l, "UTF-8"));
             }
             if (StringUtils.isBlank(requestMsg.toString())) {
-                return ResultUtils.paramNoPass("参数必传");
+                return ResultUtils.param("参数必传");
             }
             LogUtils.error(requestMsg.toString());
             JSONObject reqJson = JSON.parseObject(requestMsg.toString());
-            String accessToken = AuthTools.getToken(request);
-            if (StringUtils.isBlank(accessToken)) {
-                return ResultUtils.paramNoPass("accessToken不能为空");
-            }
-            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
-            if (cacheMember == null) {
-                return ResultUtils.login();
-            }
             Integer page = reqJson.getInteger("page");
             if (page == null) {
                 page = 1;
@@ -154,18 +134,10 @@ public class UserAction {
                 requestMsg.append(new String(b, 0, l, "UTF-8"));
             }
             if (StringUtils.isBlank(requestMsg.toString())) {
-                return ResultUtils.paramNoPass("参数必传");
+                return ResultUtils.param("参数必传");
             }
             LogUtils.error(requestMsg.toString());
             JSONObject reqJson = JSON.parseObject(requestMsg.toString());
-            String accessToken = AuthTools.getToken(request);
-            if (StringUtils.isBlank(accessToken)) {
-                return ResultUtils.paramNoPass("accessToken不能为空");
-            }
-            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
-            if (cacheMember == null) {
-                return ResultUtils.login();
-            }
             long userId = reqJson.getLongValue("userId");
             String userName = reqJson.getString("userName");
             String email = reqJson.getString("email");
@@ -205,18 +177,10 @@ public class UserAction {
                 requestMsg.append(new String(b, 0, l, "UTF-8"));
             }
             if (StringUtils.isBlank(requestMsg.toString())) {
-                return ResultUtils.paramNoPass("参数必传");
+                return ResultUtils.param("参数必传");
             }
             LogUtils.error(requestMsg.toString());
             JSONObject reqJson = JSON.parseObject(requestMsg.toString());
-            String accessToken = AuthTools.getToken(request);
-            if (StringUtils.isBlank(accessToken)) {
-                return ResultUtils.paramNoPass("accessToken不能为空");
-            }
-            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
-            if (cacheMember == null) {
-                return ResultUtils.login();
-            }
             long userId = reqJson.getLongValue("userId");
             Date now = DateUtils.getNowDate();
             SUsers sUsers = new SUsers();
@@ -250,14 +214,11 @@ public class UserAction {
                 requestMsg.append(new String(b, 0, l, "UTF-8"));
             }
             if (StringUtils.isBlank(requestMsg.toString())) {
-                return ResultUtils.paramNoPass("参数必传");
+                return ResultUtils.param("参数必传");
             }
             LogUtils.error(requestMsg.toString());
             JSONObject reqJson = JSON.parseObject(requestMsg.toString());
-            String accessToken = AuthTools.getToken(request);
-            if (StringUtils.isBlank(accessToken)) {
-                return ResultUtils.paramNoPass("accessToken不能为空");
-            }
+            String accessToken = RequestUtils.getSessionToken(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
             if (cacheMember == null) {
                 return ResultUtils.login();
@@ -276,17 +237,28 @@ public class UserAction {
     @RequestMapping(value = "/addRoleToUser", method = RequestMethod.POST)
     @ResponseBody
     public Object addRoleToUser(HttpServletRequest request, HttpServletResponse response) {
-        String userId = request.getParameter("userId");
-        String rIds = request.getParameter("rIds");
-        CommonResponse commonResponse = new CommonResponse();
+        ServletInputStream in = null;
         try {
-            long mid = SystemUtils.getMid(request);
-            //获取访问系统信息
-            String token = SystemUtils.getRequestToken(request);
-            long ownerMid = ApiUtils.getSystemOwnerId(token);
-            if (ownerMid == 0) {
+            in = request.getInputStream();
+            StringBuilder requestMsg = new StringBuilder();
+            byte[] b = new byte[4096];
+            int l;
+            while ((l = in.read(b)) != -1) {
+                requestMsg.append(new String(b, 0, l, "UTF-8"));
+            }
+            if (StringUtils.isBlank(requestMsg.toString())) {
+                return ResultUtils.param("参数必传");
+            }
+            LogUtils.error(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            String accessToken = RequestUtils.getSessionToken(request);
+            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
+            if (cacheMember == null) {
                 return ResultUtils.login();
             }
+            long ownerMid = RequestUtils.getSystemOwnerId(request);
+            long userId = reqJson.getLongValue("userId");
+            String rIds = reqJson.getString("rIds");
             String[] rIdArr = rIds.split(",");
             long[] rIdList = new long[rIdArr.length];
             for (int i = 0; i < rIdArr.length; i++) {
@@ -296,55 +268,63 @@ public class UserAction {
             Date now = DateUtils.getNowDate();
             for (long roleId : rIdList) {
                 SUserRole sUserRole = new SUserRole();
-                sUserRole.setUserId(Long.parseLong(userId));
+                sUserRole.setId(IdWorker.nextId());
+                sUserRole.setUserId(userId);
                 sUserRole.setRoleId(roleId);
                 sUserRole.setInsertTime(now);
-                sUserRole.setAddMid(mid);
+                sUserRole.setAddMid(userId);
                 sUserRole.setOwnerMid(ownerMid);
                 sUserRoleList.add(sUserRole);
             }
-
             boolean boo = userService.addRoleToUser(sUserRoleList);
             if (boo) {
-                commonResponse.setCode(ResultCode.success.code());
-                commonResponse.setResMsg("保存成功");
+                return ResultUtils.success("成功");
             } else {
-                commonResponse.setCode(ResultCode.busiError.code());
-                commonResponse.setResMsg(ResultCode.busiError.desc());
+                return ResultUtils.busiFail("失败");
             }
         } catch (Exception e) {
             e.printStackTrace();
             LogUtils.error("UserAction%addRoleToUser", e);
             return ResultUtils.exception();
         }
-        return commonResponse;
     }
 
     @ApiDesc(code = "/queryRoleByUser", name = "根据用户查询角色")
     @RequestMapping(value = "/queryRoleByUser", method = RequestMethod.POST)
     @ResponseBody
     public Object queryRoleByUser(HttpServletRequest request, HttpServletResponse response) {
-        String userId = request.getParameter("id");
-        CommonResponse commonResponse = new CommonResponse();
+        ServletInputStream in = null;
         try {
-            //获取访问系统信息
-            String token = SystemUtils.getRequestToken(request);
-            long ownerMid = ApiUtils.getSystemOwnerId(token);
-            if (ownerMid == 0) {
+            in = request.getInputStream();
+            StringBuilder requestMsg = new StringBuilder();
+            byte[] b = new byte[4096];
+            int l;
+            while ((l = in.read(b)) != -1) {
+                requestMsg.append(new String(b, 0, l, "UTF-8"));
+            }
+            if (StringUtils.isBlank(requestMsg.toString())) {
+                return ResultUtils.param("参数必传");
+            }
+            LogUtils.error(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            String accessToken = RequestUtils.getSessionToken(request);
+            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
+            if (cacheMember == null) {
                 return ResultUtils.login();
             }
+            //获取访问系统信息
+            long ownerMid = RequestUtils.getSystemOwnerId(request);
+            long userId = reqJson.getLongValue("userId");
             SUserRole sUserRole = new SUserRole();
-            sUserRole.setUserId(Long.parseLong(userId));
+            sUserRole.setUserId(userId);
             sUserRole.setOwnerMid(ownerMid);
             List<Map<String, Object>> data = userService.queryRoleByModel(sUserRole);
-            commonResponse.setData(data);
-            commonResponse.setCode(ResultCode.success.code());
+            return ResultUtils.list(data);
         } catch (Exception e) {
             e.printStackTrace();
             LogUtils.error("UserAction%queryRoleByUser", e);
             return ResultUtils.exception();
         }
-        return commonResponse;
     }
 
 }

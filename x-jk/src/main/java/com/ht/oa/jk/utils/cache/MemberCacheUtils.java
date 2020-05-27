@@ -29,4 +29,14 @@ public class MemberCacheUtils {
         RedisCacheFactory.removeKey(accessToken);
     }
 
+    /**
+     * 判断是否登录
+     *
+     * @param sessionToken
+     * @return
+     */
+    public static boolean isLogin(String sessionToken) {
+        return RedisCacheFactory.existKey(sessionToken);
+    }
+
 }

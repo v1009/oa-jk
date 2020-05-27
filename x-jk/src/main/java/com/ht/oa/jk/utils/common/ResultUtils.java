@@ -100,7 +100,7 @@ public class ResultUtils {
      * @param resMsg
      * @return
      */
-    public static Object paramNoPass(String resMsg) {
+    public static CommonResponseSimple param(String resMsg) {
         CommonResponseSimple commonResponseSimple = new CommonResponseSimple();
         commonResponseSimple.setCode(ResultCode.param.code());
         commonResponseSimple.setResMsg(resMsg);
@@ -112,7 +112,7 @@ public class ResultUtils {
      *
      * @return
      */
-    public static Object busiFail(String resMsg) {
+    public static CommonResponseSimple busiFail(String resMsg) {
         CommonResponseSimple commonResponseSimple = new CommonResponseSimple();
         commonResponseSimple.setCode(ResultCode.busiError.code());
         commonResponseSimple.setResMsg(resMsg);
@@ -124,7 +124,7 @@ public class ResultUtils {
      *
      * @return
      */
-    public static Object exception() {
+    public static CommonResponseSimple exception() {
         CommonResponseSimple commonResponseSimple = new CommonResponseSimple();
         commonResponseSimple.setCode(ResultCode.failure.code());
         commonResponseSimple.setResMsg(ResultCode.failure.desc());

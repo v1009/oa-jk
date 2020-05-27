@@ -3,7 +3,6 @@ package com.ht.oa.jk.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ht.oa.jk.config.ApiDesc;
-import com.ht.oa.jk.utils.auth.AuthTools;
 import com.ht.oa.jk.utils.auth.LoginCheckUtils;
 import com.ht.oa.jk.utils.cache.CacheMember;
 import com.ht.oa.jk.utils.cache.MemberCacheUtils;
@@ -11,6 +10,7 @@ import com.ht.oa.jk.utils.code.ResultCode;
 import com.ht.oa.jk.utils.common.ResultUtils;
 import com.ht.oa.jk.utils.common.StringUtils;
 import com.ht.oa.jk.utils.log.LogUtils;
+import com.ht.oa.jk.utils.system.RequestUtils;
 import com.ht.oa.jk.utils.token.TokenUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +32,7 @@ public class MainAction {
         ServletInputStream in = null;
         try {
             if (LoginCheckUtils.isIntercept(request)) {
-                return ResultUtils.paramNoPass("访问过于频繁");
+                return ResultUtils.param("访问过于频繁");
             }
             in = request.getInputStream();
             StringBuilder requestMsg = new StringBuilder();
@@ -42,17 +42,17 @@ public class MainAction {
                 requestMsg.append(new String(b, 0, l, "UTF-8"));
             }
             if (StringUtils.isBlank(requestMsg.toString())) {
-                return ResultUtils.paramNoPass("参数必传");
+                return ResultUtils.param("参数必传");
             }
             LogUtils.error(requestMsg.toString());
             JSONObject reqJson = JSON.parseObject(requestMsg.toString());
             String username = reqJson.getString("username");
             String password = reqJson.getString("password");
             if (StringUtils.isBlank(username)) {
-                return ResultUtils.paramNoPass("用户名不能为空");
+                return ResultUtils.param("用户名不能为空");
             }
             if (StringUtils.isBlank(password)) {
-                return ResultUtils.paramNoPass("密码不能为空");
+                return ResultUtils.param("密码不能为空");
             }
             if ("13157184276".equals(username) && "cvc#dc09".equals(password)) {
                 String accessToken = TokenUtils.getAccessToken();
@@ -67,7 +67,7 @@ public class MainAction {
                 return result;
             } else {
                 LoginCheckUtils.addLoginErrorCount(request);
-                return ResultUtils.paramNoPass("用户名或密码错误");
+                return ResultUtils.param("用户名或密码错误");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,7 +83,7 @@ public class MainAction {
         ServletInputStream in = null;
         try {
             if (LoginCheckUtils.isIntercept(request)) {
-                return ResultUtils.paramNoPass("访问过于频繁");
+                return ResultUtils.param("访问过于频繁");
             }
             in = request.getInputStream();
             StringBuilder requestMsg = new StringBuilder();
@@ -93,17 +93,10 @@ public class MainAction {
                 requestMsg.append(new String(b, 0, l, "UTF-8"));
             }
             if (StringUtils.isBlank(requestMsg.toString())) {
-                return ResultUtils.paramNoPass("参数必传");
+                return ResultUtils.param("参数必传");
             }
             LogUtils.error(requestMsg.toString());
-            String accessToken = AuthTools.getToken(request);
-            if (StringUtils.isBlank(accessToken)) {
-                return ResultUtils.paramNoPass("accessToken不能为空");
-            }
-            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
-            if (cacheMember == null) {
-                return ResultUtils.login();
-            }
+            String accessToken = RequestUtils.getSessionToken(request);
             MemberCacheUtils.logout(accessToken);
             return ResultUtils.success("已退出");
         } catch (Exception e) {

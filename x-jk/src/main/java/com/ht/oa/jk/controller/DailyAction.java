@@ -8,9 +8,6 @@ import com.ht.oa.jk.config.ConfigParam;
 import com.ht.oa.jk.model.req.HtDailyReq;
 import com.ht.oa.jk.pojo.HtDailyData;
 import com.ht.oa.jk.service.DailyService;
-import com.ht.oa.jk.utils.auth.AuthTools;
-import com.ht.oa.jk.utils.cache.CacheMember;
-import com.ht.oa.jk.utils.cache.MemberCacheUtils;
 import com.ht.oa.jk.utils.common.BaseUtils;
 import com.ht.oa.jk.utils.common.DateUtils;
 import com.ht.oa.jk.utils.common.ResultUtils;
@@ -54,18 +51,10 @@ public class DailyAction {
                 requestMsg.append(new String(b, 0, l, "UTF-8"));
             }
             if (StringUtils.isBlank(requestMsg.toString())) {
-                return ResultUtils.paramNoPass("参数必传");
+                return ResultUtils.param("参数必传");
             }
             LogUtils.error(requestMsg.toString());
             JSONObject reqJson = JSON.parseObject(requestMsg.toString());
-            String accessToken = AuthTools.getToken(request);
-            if (StringUtils.isBlank(accessToken)) {
-                return ResultUtils.paramNoPass("accessToken不能为空");
-            }
-            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
-            if (cacheMember == null) {
-                return ResultUtils.login();
-            }
             Integer page = reqJson.getInteger("page");
             if (page == null) {
                 page = 1;

@@ -7,18 +7,14 @@ import com.ht.oa.jk.controller.security.service.RoleService;
 import com.ht.oa.jk.model.SRoleResources;
 import com.ht.oa.jk.model.SRoles;
 import com.ht.oa.jk.model.req.SRolesReq;
-import com.ht.oa.jk.model.resp.CommonResponse;
-import com.ht.oa.jk.utils.auth.AuthTools;
 import com.ht.oa.jk.utils.cache.CacheMember;
 import com.ht.oa.jk.utils.cache.MemberCacheUtils;
-import com.ht.oa.jk.utils.code.ResultCode;
 import com.ht.oa.jk.utils.common.DateUtils;
 import com.ht.oa.jk.utils.common.ResultUtils;
 import com.ht.oa.jk.utils.common.StringUtils;
 import com.ht.oa.jk.utils.log.LogUtils;
 import com.ht.oa.jk.utils.seq.IdWorker;
-import com.ht.oa.jk.utils.sso.ApiUtils;
-import com.ht.oa.jk.utils.system.SystemUtils;
+import com.ht.oa.jk.utils.system.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,18 +50,10 @@ public class RoleAction {
                 requestMsg.append(new String(b, 0, l, "UTF-8"));
             }
             if (StringUtils.isBlank(requestMsg.toString())) {
-                return ResultUtils.paramNoPass("参数必传");
+                return ResultUtils.param("参数必传");
             }
             LogUtils.error(requestMsg.toString());
             JSONObject reqJson = JSON.parseObject(requestMsg.toString());
-            String accessToken = AuthTools.getToken(request);
-            if (StringUtils.isBlank(accessToken)) {
-                return ResultUtils.paramNoPass("accessToken不能为空");
-            }
-            CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
-            if (cacheMember == null) {
-                return ResultUtils.login();
-            }
             String roleName = reqJson.getString("roleName");
             Integer page = reqJson.getInteger("page");
             if (page == null) {
@@ -97,18 +85,12 @@ public class RoleAction {
                 requestMsg.append(new String(b, 0, l, "UTF-8"));
             }
             if (StringUtils.isBlank(requestMsg.toString())) {
-                return ResultUtils.paramNoPass("参数必传");
+                return ResultUtils.param("参数必传");
             }
             LogUtils.error(requestMsg.toString());
             JSONObject reqJson = JSON.parseObject(requestMsg.toString());
-            String accessToken = AuthTools.getToken(request);
-            if (StringUtils.isBlank(accessToken)) {
-                return ResultUtils.paramNoPass("accessToken不能为空");
-            }
+            String accessToken = RequestUtils.getSessionToken(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
-            if (cacheMember == null) {
-                return ResultUtils.login();
-            }
             long mid = cacheMember.getMid();
             String roleName = reqJson.getString("roleName");
             Date now = DateUtils.getNowDate();
@@ -148,18 +130,12 @@ public class RoleAction {
                 requestMsg.append(new String(b, 0, l, "UTF-8"));
             }
             if (StringUtils.isBlank(requestMsg.toString())) {
-                return ResultUtils.paramNoPass("参数必传");
+                return ResultUtils.param("参数必传");
             }
             LogUtils.error(requestMsg.toString());
             JSONObject reqJson = JSON.parseObject(requestMsg.toString());
-            String accessToken = AuthTools.getToken(request);
-            if (StringUtils.isBlank(accessToken)) {
-                return ResultUtils.paramNoPass("accessToken不能为空");
-            }
+            String accessToken = RequestUtils.getSessionToken(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
-            if (cacheMember == null) {
-                return ResultUtils.login();
-            }
             long mid = cacheMember.getMid();
             long roleId = reqJson.getLongValue("roleId");
             String roleName = reqJson.getString("roleName");
@@ -172,7 +148,7 @@ public class RoleAction {
             sRoles.setUpdateMid(mid);
             //检查角色名称是否被使用
             if (roleService.checkRoleNameIsExist(sRoles)) {
-                return ResultUtils.paramNoPass("该角色名称已经被使用,请输入其他名称");
+                return ResultUtils.param("该角色名称已经被使用,请输入其他名称");
             }
             boolean boo = roleService.modify(sRoles);
             if (boo) {
@@ -201,23 +177,17 @@ public class RoleAction {
                 requestMsg.append(new String(b, 0, l, "UTF-8"));
             }
             if (StringUtils.isBlank(requestMsg.toString())) {
-                return ResultUtils.paramNoPass("参数必传");
+                return ResultUtils.param("参数必传");
             }
             LogUtils.error(requestMsg.toString());
             JSONObject reqJson = JSON.parseObject(requestMsg.toString());
-            String accessToken = AuthTools.getToken(request);
-            if (StringUtils.isBlank(accessToken)) {
-                return ResultUtils.paramNoPass("accessToken不能为空");
-            }
+            String accessToken = RequestUtils.getSessionToken(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
-            if (cacheMember == null) {
-                return ResultUtils.login();
-            }
             long mid = cacheMember.getMid();
             long roleId = reqJson.getLongValue("roleId");
             //检查角色是否可删除
             if (!roleService.checkRoleIsEnabledDel(roleId)) {
-                return ResultUtils.paramNoPass("该角色已经被使用，不能删除");
+                return ResultUtils.param("该角色已经被使用，不能删除");
             }
             Date now = DateUtils.getNowDate();
             SRoles sRoles = new SRoles();
@@ -242,50 +212,53 @@ public class RoleAction {
     @RequestMapping(value = "/addResourceToRole", method = RequestMethod.POST)
     @ResponseBody
     public Object addResourceToRole(HttpServletRequest request, HttpServletResponse response) {
-        String roleId = request.getParameter("roleId");
-        String rIds = request.getParameter("rIds");
-        CommonResponse commonResponse = new CommonResponse();
+        ServletInputStream in = null;
         try {
+            in = request.getInputStream();
+            StringBuilder requestMsg = new StringBuilder();
+            byte[] b = new byte[4096];
+            int l;
+            while ((l = in.read(b)) != -1) {
+                requestMsg.append(new String(b, 0, l, "UTF-8"));
+            }
+            if (StringUtils.isBlank(requestMsg.toString())) {
+                return ResultUtils.param("参数必传");
+            }
+            LogUtils.error(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            long roleId = reqJson.getLongValue("roleId");
+            String rIds = reqJson.getString("rIds");
             String[] rIdArr = rIds.split(",");
             long[] rIdList = new long[rIdArr.length];
             for (int i = 0; i < rIdArr.length; i++) {
                 rIdList[i] = Long.parseLong(rIdArr[i]);
             }
-            long mid = SystemUtils.getMid(request);
-            //获取访问系统信息
-            String token = SystemUtils.getRequestToken(request);
-            long ownerMid = ApiUtils.getSystemOwnerId(token);
-            if (ownerMid == 0) {
-                return ResultUtils.login();
-            }
-
+            String sessionToken = RequestUtils.getSessionToken(request);
+            CacheMember cacheMember = MemberCacheUtils.getCacheMember(sessionToken);
+            long mid = cacheMember.getMid();
+            long ownerMid = RequestUtils.getSystemOwnerId(request);
             List<SRoleResources> sRoleResourceList = new ArrayList<>();
             Date now = DateUtils.getNowDate();
             for (long resourceId : rIdList) {
                 SRoleResources sRoleResource = new SRoleResources();
                 sRoleResource.setResourceId(resourceId);
-                sRoleResource.setRoleId(Long.parseLong(roleId));
+                sRoleResource.setRoleId(roleId);
                 sRoleResource.setInsertTime(now);
                 sRoleResource.setAddMid(mid);
                 sRoleResource.setOwnerMid(ownerMid);
                 sRoleResourceList.add(sRoleResource);
             }
-
             boolean boo = roleService.addResourceToRole(sRoleResourceList);
             if (boo) {
-                commonResponse.setCode(ResultCode.success.code());
-                commonResponse.setResMsg("保存成功");
+                return ResultUtils.success("成功");
             } else {
-                commonResponse.setCode(ResultCode.busiError.code());
-                commonResponse.setResMsg(ResultCode.busiError.desc());
+                return ResultUtils.busiFail("失败");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            commonResponse.setCode(ResultCode.failure.code());
-            commonResponse.setResMsg(ResultCode.failure.desc());
             LogUtils.error("RoleAction%addResourceToRole", e);
+            return ResultUtils.exception();
         }
-        return commonResponse;
     }
 
 }

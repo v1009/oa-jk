@@ -125,6 +125,14 @@ public class RedisCacheFactory {
         jedis.del(key);
     }
 
+    /**
+     * 判断key是否存在
+     */
+    public static boolean existKey(String key, int... args) {
+        Jedis jedis = getJedis(args);
+        return jedis.exists(key);
+    }
+
     public static void lpush(byte[] key, byte[] value, int... args) {
         Jedis jedis = getJedis(args);
         try {
