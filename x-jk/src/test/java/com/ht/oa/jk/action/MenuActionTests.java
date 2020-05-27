@@ -3,7 +3,6 @@ package com.ht.oa.jk.action;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ht.oa.jk.TokenUtils;
-import com.ht.oa.jk.utils.code.ApiCode;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,7 @@ public class MenuActionTests {
         params.put("icon", "1.jpg");
 
         MvcResult mvcResult = mockMvc.perform(
-                MockMvcRequestBuilders.post(ApiCode.S003001)
+                MockMvcRequestBuilders.post("/menu/add")
                         .header("Token", TokenUtils.Token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JSON.toJSONString(params)))
@@ -65,7 +64,7 @@ public class MenuActionTests {
         params.put("icon", "1.jpg");
 
         MvcResult mvcResult = mockMvc.perform(
-                MockMvcRequestBuilders.post(ApiCode.S003002)
+                MockMvcRequestBuilders.post("/menu/modify")
                         .header("Token", TokenUtils.Token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JSON.toJSONString(params)))
@@ -87,7 +86,7 @@ public class MenuActionTests {
         params.put("page", 1);
 
         MvcResult mvcResult = mockMvc.perform(
-                MockMvcRequestBuilders.post(ApiCode.S003003)
+                MockMvcRequestBuilders.post("/menu/findUserMenu")
                         .header("Token", TokenUtils.Token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JSON.toJSONString(params)))
@@ -108,7 +107,7 @@ public class MenuActionTests {
         JSONObject params = new JSONObject();
 
         MvcResult mvcResult = mockMvc.perform(
-                MockMvcRequestBuilders.post(ApiCode.S003004)
+                MockMvcRequestBuilders.post("/menu/findAllMenu")
                         .header("Token", TokenUtils.Token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JSON.toJSONString(params)))
@@ -130,7 +129,7 @@ public class MenuActionTests {
         params.put("roleId", 706456971917791232L);
 
         MvcResult mvcResult = mockMvc.perform(
-                MockMvcRequestBuilders.post(ApiCode.S003005)
+                MockMvcRequestBuilders.post("/menu/findMenuByRole")
                         .header("Token", TokenUtils.Token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JSON.toJSONString(params)))

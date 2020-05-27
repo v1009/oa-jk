@@ -53,7 +53,7 @@ public class MainAction {
             if (StringUtils.isBlank(password)) {
                 return ResultUtils.paramNoPass("密码不能为空");
             }
-            if ("13157184276".equals(username) && "cv#dc09".equals(password)) {
+            if ("13157184276".equals(username) && "cvc#dc09".equals(password)) {
                 String accessToken = TokenUtils.getAccessToken();
                 Map<String, Object> result = new HashMap<>();
                 result.put("code", ResultCode.success.code());
