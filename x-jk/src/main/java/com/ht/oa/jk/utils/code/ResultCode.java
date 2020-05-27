@@ -3,9 +3,9 @@ package com.ht.oa.jk.utils.code;
 public enum ResultCode {
 
     success(200, "成功"),
-    failure(500, "服务异常"),
-    busiError(501, "服务异常"),
-    param(502, "参数问题"),
+    param(201, "参数问题"),
+    failure(500, "系统繁忙"),
+    busiError(501, "服务繁忙"),
     login(101, "登录");
 
     private int code;
