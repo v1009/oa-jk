@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <title></title>
+    <script th:include="include/base :: base"></script>
+    <link rel="stylesheet" type="text/css"
+          th:href="${jsResPath}+@{resources/css/basic.css?dc_=}+${dc}">
+    <link rel="stylesheet" type="text/css"
+          th:href="${jsCdnPath}+@{bootstrap/css/bootstrap.min.css}">
+</head>
+<body>
+<div style="padding: 10px;">
+    <div class="form-group">
+        <label>appid</label>
+        <input type="text" class="form-control" th:value="${model.appId}">
+    </div>
+    <div class="form-group">
+        <label>appsecret</label>
+        <input type="text" class="form-control" th:value="${model.appSecret}">
+    </div>
+</div>
+</body>
+</html>

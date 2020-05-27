@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    
+    <!-- 日志级别 -->
+    <property name="log.root.level" value="info"/>
+    <!-- 日志路径，这里是相对路径， -->
+    <property name="log.home" value="D:/tmp/ht-oa-manage"/>
+
+    <!-- app log -->
+    <appender name="LOG_APP_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.home}/log-app.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.home}/log-app.log.%d{yyyy-MM-dd}
+            </fileNamePattern>
+            <maxHistory>5</maxHistory>
+        </rollingPolicy>
+        <encoder charset="UTF-8">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} - [%thread] %-5level - %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- error log -->
+    <appender name="LOG_ERROR_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.home}/log-error.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.home}/log-error.log.%d{yyyy-MM-dd}
+            </fileNamePattern>
+            <maxHistory>5</maxHistory>
+        </rollingPolicy>
+        <encoder charset="UTF-8">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} - [%thread] %-5level - %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <encoder charset="UTF-8">
+            <pattern>%d{HH:mm:ss.SSS} %-5level - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root>
+        <level value="${log.root.level}"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+    <!-- 应用日志 -->
+    <logger name="app" additivity="false">
+        <level value="debug"/>
+        <appender-ref ref="LOG_APP_APPENDER"/>
+    </logger>
+    <!-- 控制台打印日志 -->    
+    <logger name="console" additivity="false">
+        <level value="debug"/>
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <!-- 错误日志 -->
+    <logger name="error" additivity="false">
+        <level value="debug"/>
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="LOG_ERROR_APPENDER"/>
+        <appender-ref ref="LOG_APP_APPENDER"/>
+    </logger>
+    <!-- dao日志 -->
+    <logger name="com.ht.oa.manage.dao" additivity="false">
+        <level value="debug"/>
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="LOG_APP_APPENDER"/>
+    </logger>
+    <logger name="org.springframework.web.servlet" additivity="false">
+        <level value="debug"/>
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="LOG_APP_APPENDER"/>
+    </logger>
+
+</configuration>
