@@ -7,12 +7,9 @@ import com.ht.oa.jk.config.ConfigParam;
 import com.ht.oa.jk.controller.security.service.MenuService;
 import com.ht.oa.jk.model.SMenu;
 import com.ht.oa.jk.model.TreeMenu;
-import com.ht.oa.jk.model.resp.CommonResponseMulti;
-import com.ht.oa.jk.utils.code.ApiCode;
 import com.ht.oa.jk.utils.auth.AuthTools;
 import com.ht.oa.jk.utils.cache.CacheMember;
 import com.ht.oa.jk.utils.cache.MemberCacheUtils;
-import com.ht.oa.jk.utils.code.ResultCode;
 import com.ht.oa.jk.utils.common.DateUtils;
 import com.ht.oa.jk.utils.common.ResultUtils;
 import com.ht.oa.jk.utils.common.StringUtils;
@@ -31,13 +28,14 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
+@RequestMapping("/menu")
 public class MenuAction {
 
     @Autowired
     private MenuService menuService;
 
-    @ApiDesc(code = ApiCode.S003001, name = "添加菜单")
-    @RequestMapping(value = ApiCode.S003001, method = RequestMethod.POST)
+    @ApiDesc(code = "/add", name = "添加菜单")
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public Object add(HttpServletRequest request) {
         ServletInputStream in = null;
@@ -93,8 +91,8 @@ public class MenuAction {
         }
     }
 
-    @ApiDesc(code = ApiCode.S003002, name = "修改菜单")
-    @RequestMapping(value = ApiCode.S003002, method = RequestMethod.POST)
+    @ApiDesc(code = "/modify", name = "修改菜单")
+    @RequestMapping(value = "/modify", method = RequestMethod.POST)
     @ResponseBody
     public Object modify(HttpServletRequest request) {
         ServletInputStream in = null;
@@ -148,8 +146,8 @@ public class MenuAction {
         }
     }
 
-    @ApiDesc(code = ApiCode.S003003, name = "查询指定用户的菜单")
-    @RequestMapping(value = ApiCode.S003003, method = RequestMethod.POST)
+    @ApiDesc(code = "/findUserMenu", name = "查询指定用户的菜单")
+    @RequestMapping(value = "/findUserMenu", method = RequestMethod.POST)
     @ResponseBody
     public Object findUserMenu(HttpServletRequest request) {
         ServletInputStream in = null;
@@ -204,8 +202,8 @@ public class MenuAction {
         }
     }
 
-    @ApiDesc(code = ApiCode.S003004, name = "查询所有菜单")
-    @RequestMapping(value = ApiCode.S003004, method = RequestMethod.POST)
+    @ApiDesc(code = "/findAllMenu", name = "查询所有菜单")
+    @RequestMapping(value = "/findAllMenu", method = RequestMethod.POST)
     @ResponseBody
     public Object findAllMenu(HttpServletRequest request) {
         ServletInputStream in = null;
@@ -327,8 +325,8 @@ public class MenuAction {
         return result;
     }
 
-    @ApiDesc(code = ApiCode.S003005, name = "查询菜单通过角色")
-    @RequestMapping(value = ApiCode.S003005, method = RequestMethod.POST)
+    @ApiDesc(code = "/findMenuByRole", name = "查询菜单通过角色")
+    @RequestMapping(value = "/findMenuByRole", method = RequestMethod.POST)
     @ResponseBody
     public Object findMenuByRole(HttpServletRequest request) {
         ServletInputStream in = null;
@@ -383,8 +381,8 @@ public class MenuAction {
         }
     }
 
-    @ApiDesc(code = ApiCode.S003006, name = "启用菜单")
-    @RequestMapping(value = ApiCode.S003006, method = RequestMethod.POST)
+    @ApiDesc(code = "/enable", name = "启用菜单")
+    @RequestMapping(value = "/enable", method = RequestMethod.POST)
     @ResponseBody
     public Object enable(HttpServletRequest request) {
         ServletInputStream in = null;
@@ -427,8 +425,8 @@ public class MenuAction {
         }
     }
 
-    @ApiDesc(code = ApiCode.S003007, name = "停用菜单")
-    @RequestMapping(value = ApiCode.S003007, method = RequestMethod.POST)
+    @ApiDesc(code = "/stop", name = "停用菜单")
+    @RequestMapping(value = "/stop", method = RequestMethod.POST)
     @ResponseBody
     public Object stop(HttpServletRequest request) {
         ServletInputStream in = null;
