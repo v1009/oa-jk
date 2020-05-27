@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <title>填写日报</title>
+    <script th:include="include/base :: base"></script>
+    <link rel="stylesheet" type="text/css"
+          th:href="${jsResPath}+@{resources/css/basic.css?dc_=}+${dc}">
+    <link rel="stylesheet" type="text/css"
+          th:href="${jsCdnPath}+@{bootstrap/css/bootstrap.min.css}">
+</head>
+<body>
+<div style="padding: 10px;">
+    <div class="form-group">
+        <label>工作日期<span style="color: #ff0000">*</span>：</label>
+        <input type="text" id="dailyDate" name="dailyDate" class="form-control" th:value="${today}" readonly>
+    </div>
+    <div class="form-group">
+        <label>姓名<span style="color: #ff0000">*</span>：</label>
+        <input type="text" name="userName" class="form-control" placeholder="请输入姓名">
+    </div>
+    <div class="form-group">
+        <label>计划工作内容<span style="color: #ff0000">*</span>：</label>
+        <textarea name="planContent" class="form-control" rows="8"></textarea>
+    </div>
+    <div class="form-group" style="width: 200px;margin: 0 auto;margin-top: 50px;">
+        <input id="save" type="button" class="btn btn-primary btn-block" value="提交" onclick="doSave();">
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="${jsCdnPath}+@{jquery/jquery-1.9.1.min.js}"></script>
+<script type="text/javascript" th:src="${jsCdnPath}+@{layer/layer.js}"></script>
+<script type="text/javascript" th:src="${jsCdnPath}+@{laydate/laydate.js}"></script>
+<script type="text/javascript" th:src="${jsResPath}+@{resources/js/base.js}"></script>
+<script type="text/javascript">
+
+    function doSave() {
+        //check valid
+        var userName = $('input[name=userName]').val();
+        if ($.trim(userName).length < 1) {
+            commonTip('请输入姓名不能为空');
+            return;
+        }
+        var planContent = $('textarea[name=planContent]').val();
+        if ($.trim(planContent).length < 10) {
+            commonTip('计划工作内容不能少于10个字');
+            return;
+        }
+        var saveBtn = $('#save');
+        var submitState = saveBtn.attr('data-submit');
+        if (submitState == 1) {
+            return;
+        }
+        saveBtn.attr('data-submit', 1).val('正在提交...');
+        ajaxCallback({
+            url: jsDataPath + 'daily/save',
+            type: 'post',
+            data: {
+                userName: userName,
+                planContent: planContent
+            }
+        }, function (msg) {
+            if (msg && msg.code == 200) {
+                successTip(msg.resMsg, function () {
+                    window.location.reload();
+                });
+            } else {
+                failureTip(msg.resMsg);
+                saveBtn.attr('data-submit', 0).val('提交');
+            }
+        });
+    }
+
+</script>
+</html>

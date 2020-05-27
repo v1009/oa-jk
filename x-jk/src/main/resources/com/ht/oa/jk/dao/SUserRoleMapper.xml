@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.oa.jk.dao.SUserRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.oa.jk.model.SUserRole" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="role_id" property="roleId" jdbcType="BIGINT" />
+    <result column="insert_time" property="insertTime" jdbcType="TIMESTAMP" />
+    <result column="add_mid" property="addMid" jdbcType="BIGINT" />
+    <result column="owner_mid" property="ownerMid" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, role_id, insert_time, add_mid, owner_mid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from s_user_role
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from s_user_role
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ht.oa.jk.model.SUserRole" >
+    insert into s_user_role (id, user_id, role_id, 
+      insert_time, add_mid, owner_mid
+      )
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT}, 
+      #{insertTime,jdbcType=TIMESTAMP}, #{addMid,jdbcType=BIGINT}, #{ownerMid,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ht.oa.jk.model.SUserRole" >
+    insert into s_user_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="roleId != null" >
+        role_id,
+      </if>
+      <if test="insertTime != null" >
+        insert_time,
+      </if>
+      <if test="addMid != null" >
+        add_mid,
+      </if>
+      <if test="ownerMid != null" >
+        owner_mid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=BIGINT},
+      </if>
+      <if test="insertTime != null" >
+        #{insertTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addMid != null" >
+        #{addMid,jdbcType=BIGINT},
+      </if>
+      <if test="ownerMid != null" >
+        #{ownerMid,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.oa.jk.model.SUserRole" >
+    update s_user_role
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="roleId != null" >
+        role_id = #{roleId,jdbcType=BIGINT},
+      </if>
+      <if test="insertTime != null" >
+        insert_time = #{insertTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="addMid != null" >
+        add_mid = #{addMid,jdbcType=BIGINT},
+      </if>
+      <if test="ownerMid != null" >
+        owner_mid = #{ownerMid,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.oa.jk.model.SUserRole" >
+    update s_user_role
+    set user_id = #{userId,jdbcType=BIGINT},
+      role_id = #{roleId,jdbcType=BIGINT},
+      insert_time = #{insertTime,jdbcType=TIMESTAMP},
+      add_mid = #{addMid,jdbcType=BIGINT},
+      owner_mid = #{ownerMid,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <!-- 查询角色通过用户id -->
+  <select id="queryRoleByModel" parameterType="com.ht.oa.jk.model.SUserRole" resultType="java.util.Map">
+      select
+      role_id as roleId,
+      role_name as roleName,
+      insert_time as insertTime,
+      (select count(*) from s_user_role where user_id=#{userId} and owner_mid = #{ownerMid,jdbcType=BIGINT} and role_id=sr.role_id) as status
+      from
+      s_roles sr
+  </select>
+  <!-- 删除通过用户id -->
+  <delete id="delRecordByModel" parameterType="com.ht.oa.jk.model.SUserRole">
+    delete from s_user_role where user_id = #{userId,jdbcType=BIGINT} and owner_mid = #{ownerMid,jdbcType=BIGINT}
+  </delete>
+  <!-- 添加菜单到角色 -->
+  <insert id="batchInsert" parameterType="java.util.List">
+    insert into s_user_role (id, user_id, role_id,
+    insert_time, add_mid, owner_mid
+    )
+    values
+    <foreach collection="list" item="item" separator=",">
+      (null, #{item.userId,jdbcType=BIGINT}, #{item.roleId,jdbcType=INTEGER},
+      #{item.insertTime,jdbcType=TIMESTAMP}, #{item.addMid,jdbcType=BIGINT}, #{item.ownerMid,jdbcType=BIGINT}
+      )
+    </foreach>
+  </insert>
+
+</mapper>

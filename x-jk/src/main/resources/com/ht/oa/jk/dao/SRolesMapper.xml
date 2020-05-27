@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ht.oa.jk.dao.SRolesMapper" >
+  <resultMap id="BaseResultMap" type="com.ht.oa.jk.model.SRoles" >
+    <id column="role_id" property="roleId" jdbcType="BIGINT" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+    <result column="insert_time" property="insertTime" jdbcType="TIMESTAMP" />
+    <result column="last_time" property="lastTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="add_mid" property="addMid" jdbcType="BIGINT" />
+    <result column="update_mid" property="updateMid" jdbcType="BIGINT" />
+    <result column="owner_mid" property="ownerMid" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    role_id, role_name, insert_time, last_time, status, add_mid, update_mid, owner_mid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from s_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from s_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ht.oa.jk.model.SRoles" >
+    insert into s_roles (role_id, role_name, insert_time, 
+      last_time, status, add_mid, 
+      update_mid, owner_mid)
+    values (#{roleId,jdbcType=BIGINT}, #{roleName,jdbcType=VARCHAR}, #{insertTime,jdbcType=TIMESTAMP}, 
+      #{lastTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{addMid,jdbcType=BIGINT}, 
+      #{updateMid,jdbcType=BIGINT}, #{ownerMid,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ht.oa.jk.model.SRoles" >
+    insert into s_roles
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="roleId != null" >
+        role_id,
+      </if>
+      <if test="roleName != null" >
+        role_name,
+      </if>
+      <if test="insertTime != null" >
+        insert_time,
+      </if>
+      <if test="lastTime != null" >
+        last_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="addMid != null" >
+        add_mid,
+      </if>
+      <if test="updateMid != null" >
+        update_mid,
+      </if>
+      <if test="ownerMid != null" >
+        owner_mid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="roleId != null" >
+        #{roleId,jdbcType=BIGINT},
+      </if>
+      <if test="roleName != null" >
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="insertTime != null" >
+        #{insertTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastTime != null" >
+        #{lastTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="addMid != null" >
+        #{addMid,jdbcType=BIGINT},
+      </if>
+      <if test="updateMid != null" >
+        #{updateMid,jdbcType=BIGINT},
+      </if>
+      <if test="ownerMid != null" >
+        #{ownerMid,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ht.oa.jk.model.SRoles" >
+    update s_roles
+    <set >
+      <if test="roleName != null" >
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="insertTime != null" >
+        insert_time = #{insertTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastTime != null" >
+        last_time = #{lastTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="addMid != null" >
+        add_mid = #{addMid,jdbcType=BIGINT},
+      </if>
+      <if test="updateMid != null" >
+        update_mid = #{updateMid,jdbcType=BIGINT},
+      </if>
+      <if test="ownerMid != null" >
+        owner_mid = #{ownerMid,jdbcType=BIGINT},
+      </if>
+    </set>
+    where role_id = #{roleId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ht.oa.jk.model.SRoles" >
+    update s_roles
+    set role_name = #{roleName,jdbcType=VARCHAR},
+      insert_time = #{insertTime,jdbcType=TIMESTAMP},
+      last_time = #{lastTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      add_mid = #{addMid,jdbcType=BIGINT},
+      update_mid = #{updateMid,jdbcType=BIGINT},
+      owner_mid = #{ownerMid,jdbcType=BIGINT}
+    where role_id = #{roleId,jdbcType=BIGINT}
+  </update>
+  <!-- 查询所有的角色 -->
+  <select id="queryAllRoles" parameterType="com.ht.oa.jk.model.SRoles" resultType="java.util.Map">
+      select
+      role_id as roleId,
+      role_name as roleName,
+      insert_time as insertTime
+      from s_roles
+      where owner_mid = #{ownerMid,jdbcType=BIGINT} and status=1
+      order by role_id
+  </select>
+  <!-- 查询角色名称有没有被使用 -->
+  <select id="queryRoleNameIsUse" parameterType="com.ht.oa.jk.model.SRoles" resultType="java.lang.Integer">
+      select count(*) from s_roles where role_name=#{roleName} and status=1
+  </select>
+  <!-- 查询角色有没有被使用 -->
+  <select id="queryRoleIsUse" parameterType="java.lang.Long" resultType="java.lang.Integer">
+      select count(*) from s_user_role where role_id=#{roleId}
+  </select>
+  <!-- 更新角色为不可用 -->
+  <update id="updateToDisable" parameterType="com.ht.oa.jk.model.SRoles">
+    update s_roles set status=0,update_mid = #{updateMid,jdbcType=BIGINT},last_time = #{lastTime,jdbcType=TIMESTAMP}
+    where role_id = #{roleId,jdbcType=BIGINT} and status=1
+  </update>
+  <!-- 更新 -->
+  <update id="modify" parameterType="com.ht.oa.jk.model.SRoles">
+    update s_roles
+    <set>
+      <if test="roleName != null">
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="lastTime != null">
+        last_time = #{lastTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateMid != null">
+        update_mid = #{updateMid,jdbcType=BIGINT},
+      </if>
+    </set>
+    where role_id = #{roleId,jdbcType=BIGINT} and status=1
+  </update>
+  <!-- 查询角色 -->
+  <select id="list" parameterType="com.ht.oa.jk.model.req.SRolesReq" resultType="java.util.Map">
+    select
+    role_id as roleId,
+    role_name as roleName,
+    DATE_FORMAT(last_time,'%Y-%m-%d') as lastTime
+    from s_roles
+    <where>
+      <if test="roleName != null and roleName != ''">and role_name like #{roleName}</if>
+      <if test="true">and status=1</if>
+    </where>
+    order by role_id
+  </select>
+
+</mapper>
