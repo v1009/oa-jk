@@ -22,9 +22,9 @@
         </commentGenerator>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://106.14.9.112:3309/ht_oa"
-                        userId="ht_system"
-                        password="ht@123@">
+                        connectionURL="jdbc:mysql://39.96.42.61:3307/ht_oa"
+                        userId="ht_oa"
+                        password="D@2343Ct3t4gvVc9s">
         </jdbcConnection>
 
         <javaModelGenerator targetPackage="com.ht.oa.manage.model" targetProject="src/main/java">

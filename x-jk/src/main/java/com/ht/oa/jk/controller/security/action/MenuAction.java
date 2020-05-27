@@ -3,7 +3,6 @@ package com.ht.oa.jk.controller.security.action;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ht.oa.jk.config.ApiDesc;
-import com.ht.oa.jk.config.ConfigParam;
 import com.ht.oa.jk.controller.security.service.MenuService;
 import com.ht.oa.jk.model.SMenu;
 import com.ht.oa.jk.model.TreeMenu;
@@ -174,17 +173,6 @@ public class MenuAction {
             }
             long userId = reqJson.getLongValue("userId");
             List<SMenu> list = menuService.getAllResources(userId);
-            //如果是正式环境则去掉菜单管理
-            if (ConfigParam.runMode == 1) {
-                if (list != null && list.size() > 0) {
-                    for (SMenu sMenu : list) {
-                        if ("菜单管理".equals(sMenu.getMenuName())) {
-                            list.remove(sMenu);
-                            break;
-                        }
-                    }
-                }
-            }
             TreeMenu root = new TreeMenu();
             root.setLeaf(false);
             root.setId(0L);
@@ -229,17 +217,6 @@ public class MenuAction {
                 return ResultUtils.login();
             }
             List<SMenu> list = menuService.getAllResources();
-            //如果是正式环境则去掉菜单管理
-            if (ConfigParam.runMode == 1) {
-                if (list != null && list.size() > 0) {
-                    for (SMenu sMenu : list) {
-                        if ("菜单管理".equals(sMenu.getMenuName())) {
-                            list.remove(sMenu);
-                            break;
-                        }
-                    }
-                }
-            }
             TreeMenu root = new TreeMenu();
             root.setLeaf(false);
             root.setId(0L);
@@ -353,17 +330,6 @@ public class MenuAction {
             }
             long roleId = reqJson.getLongValue("roleId");
             List<SMenu> list = menuService.getResourcesByRoleId(roleId);
-            //如果是正式环境则去掉菜单管理
-            if (ConfigParam.runMode == 1) {
-                if (list != null && list.size() > 0) {
-                    for (SMenu sMenu : list) {
-                        if ("菜单管理".equals(sMenu.getMenuName())) {
-                            list.remove(sMenu);
-                            break;
-                        }
-                    }
-                }
-            }
             TreeMenu root = new TreeMenu();
             root.setLeaf(false);
             root.setId(0L);

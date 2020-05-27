@@ -26,21 +26,6 @@ public class BaseUtils {
         return false;
     }
 
-
-    /**
-     * 获取服务器前缀路径
-     */
-    public static String getServerSuffixPath() {
-        int isProxy = ConfigParam.isProxy;
-        if (isProxy == 1) {//启动代理
-            if (ConfigParam.proxyPort == 80 || ConfigParam.proxyPort == 443) {
-                return ConfigParam.schema + "://" + ConfigParam.domain + "/";
-            }
-            return ConfigParam.schema + "://" + ConfigParam.domain + ":" + ConfigParam.proxyPort + "/";
-        }
-        return ConfigParam.schema + "://" + ConfigParam.domain + ":" + ConfigParam.port + "/";
-    }
-
     /**
      * urlEncoder
      */
@@ -78,16 +63,6 @@ public class BaseUtils {
             url = new StringBuffer(url.toString().replace("http://", "https://"));
         }
         return url.toString();
-    }
-
-    /**
-     * 获取重定向的登录页面
-     *
-     * @param request
-     * @return
-     */
-    public static String getRedirectLoginUrl(HttpServletRequest request) {
-        return "redirect:" + getServerSuffixPath() + "login.htm";
     }
 
     /**
