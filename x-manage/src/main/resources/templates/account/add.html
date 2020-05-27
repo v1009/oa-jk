@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <title></title>
+    <script th:include="include/base :: base"></script>
+    <link rel="stylesheet" type="text/css"
+          th:href="${jsResPath}+@{resources/css/basic.css?dc_=}+${dc}">
+    <link rel="stylesheet" type="text/css"
+          th:href="${jsCdnPath}+@{bootstrap/css/bootstrap.min.css}">
+</head>
+<body>
+<div style="padding: 10px;">
+    <div class="form-group">
+        <label>赠送数量<span style="color: #ff0000">*</span>【默认50】：</label>
+        <input type="text" name="enableTotal" class="form-control" value="50">
+    </div>
+    <div class="form-group">
+        <label>备注<span style="color: #ff0000">*</span>：</label>
+        <input type="text" name="remark" class="form-control" placeholder="请输入使用方信息">
+    </div>
+    <div class="form-group" style="width: 200px;margin: 0 auto;margin-top: 50px;">
+        <input id="save" type="button" class="btn btn-primary btn-block" value="保存" onclick="doSave();">
+    </div>
+</div>
+</body>
+<script type="text/javascript" th:src="${jsCdnPath}+@{jquery/jquery-1.9.1.min.js}"></script>
+<script type="text/javascript" th:src="${jsCdnPath}+@{layer/layer.js}"></script>
+<script type="text/javascript" th:src="${jsResPath}+@{resources/js/base.js}"></script>
+<script type="text/javascript">
+
+    function doSave() {
+        //check valid
+        var enableTotal = $('input[name=enableTotal]').val();
+        if ($.trim(enableTotal).length < 1) {
+            commonTip('赠送数量不能为空');
+            return;
+        }
+        var remark = $('input[name=remark]').val();
+        if ($.trim(remark).length < 1) {
+            commonTip('备注不能为空');
+            return;
+        }
+        var saveBtn = $('#save');
+        var submitState = saveBtn.attr('data-submit');
+        if (submitState == 1) {
+            return;
+        }
+        saveBtn.attr('data-submit', 1).val('正在保存...');
+        ajaxCallback({
+            url: jsDataPath + 'account/save',
+            type: 'post',
+            data: {
+                enableTotal: enableTotal,
+                remark: remark
+            }
+        }, function (msg) {
+            if (msg && msg.code == 200) {
+                successTip(msg.resMsg, function () {
+                    parent.closeLayer();
+                });
+            } else {
+                failureTip(msg.resMsg);
+                saveBtn.attr('data-submit', 0).val('保存');
+            }
+        });
+    }
+
+</script>
+</html>
