@@ -25,7 +25,7 @@ import java.util.Map;
 @Controller
 public class MainAction {
 
-    @ApiDesc(code = "/login", name = "登录")
+    @ApiDesc(name = "登录")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     public Object login(HttpServletRequest request) {
@@ -76,7 +76,7 @@ public class MainAction {
         }
     }
 
-    @ApiDesc(code = "/logout", name = "退出系统")
+    @ApiDesc(name = "退出系统")
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     @ResponseBody
     public Object logout(HttpServletRequest request) {

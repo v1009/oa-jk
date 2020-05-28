@@ -108,10 +108,10 @@
       select
       role_id as roleId,
       role_name as roleName,
-      insert_time as insertTime,
-      (select count(*) from s_user_role where user_id=#{userId} and owner_mid = #{ownerMid,jdbcType=BIGINT} and role_id=sr.role_id) as status
+      (select count(*) from s_user_role where user_id=#{userId} and role_id=sr.role_id) as status
       from
       s_roles sr
+      where owner_mid = #{ownerMid,jdbcType=BIGINT} and status=1
   </select>
   <!-- 删除通过用户id -->
   <delete id="delRecordByModel" parameterType="com.ht.oa.jk.model.SUserRole">

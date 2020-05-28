@@ -36,7 +36,7 @@ public class RoleAction {
     @Autowired
     private RoleService roleService;
 
-    @ApiDesc(code = "/list", name = "查询角色列表")
+    @ApiDesc( name = "查询角色列表")
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
     public Object list(HttpServletRequest request, HttpServletResponse response) {
@@ -71,7 +71,7 @@ public class RoleAction {
         }
     }
 
-    @ApiDesc(code = "/add", name = "添加角色")
+    @ApiDesc(name = "添加角色")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public Object add(HttpServletRequest request, HttpServletResponse response) {
@@ -90,6 +90,7 @@ public class RoleAction {
             LogUtils.error(requestMsg.toString());
             JSONObject reqJson = JSON.parseObject(requestMsg.toString());
             String accessToken = RequestUtils.getSessionToken(request);
+            long ownerMid = RequestUtils.getSystemOwnerId(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
             long mid = cacheMember.getMid();
             String roleName = reqJson.getString("roleName");
@@ -102,7 +103,7 @@ public class RoleAction {
             sRoles.setStatus(1);
             sRoles.setAddMid(mid);
             sRoles.setUpdateMid(mid);
-            sRoles.setOwnerMid(0L);
+            sRoles.setOwnerMid(ownerMid);
             boolean boo = roleService.add(sRoles);
             if (boo) {
                 return ResultUtils.success("添加成功");
@@ -116,7 +117,7 @@ public class RoleAction {
         }
     }
 
-    @ApiDesc(code = "/modify", name = "修改角色信息")
+    @ApiDesc(name = "修改角色信息")
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     @ResponseBody
     public Object modify(HttpServletRequest request, HttpServletResponse response) {
@@ -163,7 +164,7 @@ public class RoleAction {
         }
     }
 
-    @ApiDesc(code = "/del", name = "删除角色")
+    @ApiDesc( name = "删除角色")
     @RequestMapping(value = "/del", method = RequestMethod.POST)
     @ResponseBody
     public Object del(HttpServletRequest request, HttpServletResponse response) {
@@ -208,7 +209,7 @@ public class RoleAction {
         }
     }
 
-    @ApiDesc(code = "/addResourceToRole", name = "添加权限到角色")
+    @ApiDesc(name = "添加权限到角色")
     @RequestMapping(value = "/addResourceToRole", method = RequestMethod.POST)
     @ResponseBody
     public Object addResourceToRole(HttpServletRequest request, HttpServletResponse response) {

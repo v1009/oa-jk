@@ -29,7 +29,10 @@ public class ResultUtils {
                      *  1，解决long精度丢失问题，转换为string
                      *  2，值为null的情况下转化为空字符串
                      */
-                    String value = String.valueOf(item.get(key) == null ? "" : item.get(key));
+                    Object value = item.get(key);
+                    if (value instanceof Long) {
+                        value = String.valueOf(item.get(key));
+                    }
                     item.put(key, value);
                 }
             }
@@ -53,7 +56,10 @@ public class ResultUtils {
                  *  1，解决long精度丢失问题，转换为string
                  *  2，值为null的情况下转化为空字符串
                  */
-                String value = String.valueOf(item.get(key) == null ? "" : item.get(key));
+                Object value = item.get(key);
+                if (value instanceof Long) {
+                    value = String.valueOf(item.get(key));
+                }
                 item.put(key, value);
             }
         }

@@ -1,4 +1,4 @@
-package com.ht.oa.jk.action;
+package com.ht.oa.jk;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -30,7 +30,7 @@ public class MainActionTests {
     public void login() throws Exception {
         JSONObject params = new JSONObject();
         params.put("username", "13157184276");
-        params.put("password", "cv#dc09");
+        params.put("password", "cvc#dc09");
 
         MvcResult mvcResult = mockMvc.perform(
                 MockMvcRequestBuilders.post("/login")

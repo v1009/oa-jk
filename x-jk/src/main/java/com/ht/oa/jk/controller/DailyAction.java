@@ -37,7 +37,7 @@ public class DailyAction {
     @Autowired
     private DailyService dailyService;
 
-    @ApiDesc(code = "/list", name = "查询日报列表")
+    @ApiDesc(name = "查询日报列表")
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
     public Object list(HttpServletRequest request, HttpServletResponse response) {
@@ -76,7 +76,7 @@ public class DailyAction {
         }
     }
 
-    @ApiDesc(code = "/exportDaily", name = "导出的日报")
+    @ApiDesc(name = "导出的日报")
     @RequestMapping(value = "/exportDaily", method = RequestMethod.GET)
     public void exportDaily(HttpServletRequest request, HttpServletResponse response) {
         String day = request.getParameter("day");

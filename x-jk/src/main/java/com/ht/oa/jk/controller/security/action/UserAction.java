@@ -37,7 +37,7 @@ public class UserAction {
     @Autowired
     private UserService userService;
 
-    @ApiDesc(code = "/add", name = "添加用户")
+    @ApiDesc(name = "添加用户")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public Object add(HttpServletRequest request, HttpServletResponse response) {
@@ -87,7 +87,7 @@ public class UserAction {
         }
     }
 
-    @ApiDesc(code = "/list", name = "查询用户列表")
+    @ApiDesc(name = "查询用户列表")
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
     public Object list(HttpServletRequest request, HttpServletResponse response) {
@@ -120,7 +120,7 @@ public class UserAction {
         }
     }
 
-    @ApiDesc(code = "/modify", name = "修改用户信息")
+    @ApiDesc(name = "修改用户信息")
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     @ResponseBody
     public Object modify(HttpServletRequest request, HttpServletResponse response) {
@@ -163,7 +163,7 @@ public class UserAction {
         }
     }
 
-    @ApiDesc(code = "/del", name = "删除用户")
+    @ApiDesc(name = "删除用户")
     @RequestMapping(value = "/del", method = RequestMethod.POST)
     @ResponseBody
     public Object del(HttpServletRequest request, HttpServletResponse response) {
@@ -200,7 +200,7 @@ public class UserAction {
         }
     }
 
-    @ApiDesc(code = "/findModelByUserId", name = "查询用户信息")
+    @ApiDesc(name = "查询用户信息")
     @RequestMapping(value = "/findModelByUserId", method = RequestMethod.POST)
     @ResponseBody
     public Object findModelByUserId(HttpServletRequest request, HttpServletResponse response) {
@@ -233,7 +233,7 @@ public class UserAction {
         }
     }
 
-    @ApiDesc(code = "/addRoleToUser", name = "授权角色给用户")
+    @ApiDesc(name = "授权角色给用户")
     @RequestMapping(value = "/addRoleToUser", method = RequestMethod.POST)
     @ResponseBody
     public Object addRoleToUser(HttpServletRequest request, HttpServletResponse response) {
@@ -289,7 +289,7 @@ public class UserAction {
         }
     }
 
-    @ApiDesc(code = "/queryRoleByUser", name = "根据用户查询角色")
+    @ApiDesc(name = "根据用户查询角色")
     @RequestMapping(value = "/queryRoleByUser", method = RequestMethod.POST)
     @ResponseBody
     public Object queryRoleByUser(HttpServletRequest request, HttpServletResponse response) {

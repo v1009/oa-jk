@@ -30,7 +30,7 @@ public class MenuAction {
     @Autowired
     private MenuService menuService;
 
-    @ApiDesc(code = "/add", name = "添加菜单")
+    @ApiDesc(name = "添加菜单")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public Object add(HttpServletRequest request) {
@@ -79,7 +79,7 @@ public class MenuAction {
         }
     }
 
-    @ApiDesc(code = "/modify", name = "修改菜单")
+    @ApiDesc(name = "修改菜单")
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     @ResponseBody
     public Object modify(HttpServletRequest request) {
@@ -126,7 +126,7 @@ public class MenuAction {
         }
     }
 
-    @ApiDesc(code = "/findUserMenu", name = "查询指定用户的菜单")
+    @ApiDesc(name = "查询指定用户的菜单")
     @RequestMapping(value = "/findUserMenu", method = RequestMethod.POST)
     @ResponseBody
     public Object findUserMenu(HttpServletRequest request) {
@@ -163,7 +163,7 @@ public class MenuAction {
         }
     }
 
-    @ApiDesc(code = "/findAllMenu", name = "查询所有菜单")
+    @ApiDesc(name = "查询所有菜单")
     @RequestMapping(value = "/findAllMenu", method = RequestMethod.POST)
     @ResponseBody
     public Object findAllMenu(HttpServletRequest request) {
@@ -266,7 +266,7 @@ public class MenuAction {
         return result;
     }
 
-    @ApiDesc(code = "/findMenuByRole", name = "查询菜单通过角色")
+    @ApiDesc(name = "查询菜单通过角色")
     @RequestMapping(value = "/findMenuByRole", method = RequestMethod.POST)
     @ResponseBody
     public Object findMenuByRole(HttpServletRequest request) {
@@ -303,7 +303,7 @@ public class MenuAction {
         }
     }
 
-    @ApiDesc(code = "/enable", name = "启用菜单")
+    @ApiDesc(name = "启用菜单")
     @RequestMapping(value = "/enable", method = RequestMethod.POST)
     @ResponseBody
     public Object enable(HttpServletRequest request) {
@@ -339,7 +339,7 @@ public class MenuAction {
         }
     }
 
-    @ApiDesc(code = "/stop", name = "停用菜单")
+    @ApiDesc(name = "停用菜单")
     @RequestMapping(value = "/stop", method = RequestMethod.POST)
     @ResponseBody
     public Object stop(HttpServletRequest request) {

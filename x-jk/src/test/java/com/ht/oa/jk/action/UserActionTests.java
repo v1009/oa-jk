@@ -127,7 +127,7 @@ public class UserActionTests {
         params.put("userId", 703666026478440448L);
 
         MvcResult mvcResult = mockMvc.perform(
-                MockMvcRequestBuilders.post("/user/findUserByUserId")
+                MockMvcRequestBuilders.post("/user/findModelByUserId")
                         .header("Token", TokenUtils.Token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JSON.toJSONString(params)))
@@ -137,5 +137,28 @@ public class UserActionTests {
         responseContent = new String(responseContent.getBytes("ISO-8859-1"), "UTF-8");
         System.out.println(responseContent);
     }
+
+    /**
+     * 根据用户查询角色
+     *
+     * @throws Exception
+     */
+    @Test
+    public void queryRoleByUser() throws Exception {
+        JSONObject params = new JSONObject();
+        params.put("userId", 703666026478440448L);
+
+        MvcResult mvcResult = mockMvc.perform(
+                MockMvcRequestBuilders.post("/user/queryRoleByUser")
+                        .header("Token", TokenUtils.Token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JSON.toJSONString(params)))
+                .andReturn();
+
+        String responseContent = mvcResult.getResponse().getContentAsString();
+        responseContent = new String(responseContent.getBytes("ISO-8859-1"), "UTF-8");
+        System.out.println(responseContent);
+    }
+
 
 }

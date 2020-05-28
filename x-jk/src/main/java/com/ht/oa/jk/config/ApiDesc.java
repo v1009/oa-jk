@@ -19,7 +19,7 @@ public @interface ApiDesc {
      *
      * @return
      */
-    String code();
+    String code() default "";
 
     /**
      * 接口描述
