@@ -6,7 +6,6 @@ import com.ht.oa.jk.dao.SUsersMapper;
 import com.ht.oa.jk.model.SUserRole;
 import com.ht.oa.jk.model.SUsers;
 import com.ht.oa.jk.model.req.SUsersReq;
-import com.ht.oa.jk.model.resp.UserResp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

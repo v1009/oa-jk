@@ -278,9 +278,9 @@ public class UserAction {
             }
             boolean boo = userService.addRoleToUser(sUserRoleList);
             if (boo) {
-                return ResultUtils.success("成功");
+                return ResultUtils.success("保存成功");
             } else {
-                return ResultUtils.busiFail("失败");
+                return ResultUtils.busiFail("保存失败");
             }
         } catch (Exception e) {
             e.printStackTrace();

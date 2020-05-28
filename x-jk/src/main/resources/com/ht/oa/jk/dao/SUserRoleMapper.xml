@@ -124,7 +124,7 @@
     )
     values
     <foreach collection="list" item="item" separator=",">
-      (null, #{item.userId,jdbcType=BIGINT}, #{item.roleId,jdbcType=INTEGER},
+      (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.roleId,jdbcType=INTEGER},
       #{item.insertTime,jdbcType=TIMESTAMP}, #{item.addMid,jdbcType=BIGINT}, #{item.ownerMid,jdbcType=BIGINT}
       )
     </foreach>
