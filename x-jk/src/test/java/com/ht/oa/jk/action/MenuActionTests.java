@@ -98,6 +98,27 @@ public class MenuActionTests {
     }
 
     /**
+     * 查询所有菜单通过角色
+     *
+     * @throws Exception
+     */
+    @Test
+    public void findAllMenuByRoleId() throws Exception {
+        JSONObject params = new JSONObject();
+
+        MvcResult mvcResult = mockMvc.perform(
+                MockMvcRequestBuilders.post("/menu/findAllMenuByRoleId")
+                        .header("Token", TokenUtils.Token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JSON.toJSONString(params)))
+                .andReturn();
+
+        String responseContent = mvcResult.getResponse().getContentAsString();
+        responseContent = new String(responseContent.getBytes("ISO-8859-1"), "UTF-8");
+        System.out.println(responseContent);
+    }
+
+    /**
      * 查询所有菜单
      *
      * @throws Exception

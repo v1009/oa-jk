@@ -182,7 +182,7 @@
   <select id="queryMenusByMid" parameterType="java.lang.Long" resultMap="BaseResultMap">
       select * from s_menu where menu_id in (
           select menu_id from s_role_menu where role_id in (
-             select role_id from s_user_role where user_id=#{mid}
+             select role_id from s_user_role where user_id=#{userId}
           )
       )
       and status=1
@@ -245,6 +245,21 @@
   <!-- 查询最后一个子节点的排序值通过parentId -->
   <select id="queryLastChildPriorityByParentId" parameterType="java.lang.Long" resultType="java.lang.Integer">
     select priority from s_menu where parent_id = #{parentId,jdbcType=BIGINT} order by priority limit 1
+  </select>
+  <!-- 查询角色通过用户id -->
+  <select id="getAllMenuByRoleId" parameterType="com.ht.oa.jk.model.SRoleMenu" resultType="com.ht.oa.jk.model.SMenu">
+      SELECT
+      menu_id AS menuId,
+      parent_id as parentId,
+      menu_name AS menuName,
+      leaf as leaf,
+      priority as priority,
+      menu_desc as menuDesc,
+      (SELECT COUNT(*) FROM s_role_menu WHERE owner_mid = #{ownerMid,jdbcType=BIGINT} AND role_id=#{roleId,jdbcType=BIGINT} AND menu_id=sm.menu_id) AS status
+      FROM
+      s_menu sm
+      WHERE STATUS=1
+      order by priority
   </select>
 
 </mapper>

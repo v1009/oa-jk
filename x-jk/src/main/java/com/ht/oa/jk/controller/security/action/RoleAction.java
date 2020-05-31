@@ -36,24 +36,16 @@ public class RoleAction {
     @Autowired
     private RoleService roleService;
 
-    @ApiDesc( name = "查询角色列表")
+    @ApiDesc(name = "查询角色列表")
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
     public Object list(HttpServletRequest request, HttpServletResponse response) {
-        ServletInputStream in = null;
         try {
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
-            LogUtils.error(requestMsg.toString());
-            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg);
             String roleName = reqJson.getString("roleName");
             Integer page = reqJson.getInteger("page");
             if (page == null) {
@@ -75,20 +67,12 @@ public class RoleAction {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public Object add(HttpServletRequest request, HttpServletResponse response) {
-        ServletInputStream in = null;
         try {
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
-            LogUtils.error(requestMsg.toString());
-            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg);
             String accessToken = RequestUtils.getSessionToken(request);
             long ownerMid = RequestUtils.getSystemOwnerId(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
@@ -121,20 +105,12 @@ public class RoleAction {
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     @ResponseBody
     public Object modify(HttpServletRequest request, HttpServletResponse response) {
-        ServletInputStream in = null;
         try {
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
-            LogUtils.error(requestMsg.toString());
-            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg);
             String accessToken = RequestUtils.getSessionToken(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
             long mid = cacheMember.getMid();
@@ -164,24 +140,16 @@ public class RoleAction {
         }
     }
 
-    @ApiDesc( name = "删除角色")
+    @ApiDesc(name = "删除角色")
     @RequestMapping(value = "/del", method = RequestMethod.POST)
     @ResponseBody
     public Object del(HttpServletRequest request, HttpServletResponse response) {
-        ServletInputStream in = null;
         try {
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
-            LogUtils.error(requestMsg.toString());
-            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg);
             String accessToken = RequestUtils.getSessionToken(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
             long mid = cacheMember.getMid();
@@ -209,24 +177,16 @@ public class RoleAction {
         }
     }
 
-    @ApiDesc(name = "添加权限到角色")
-    @RequestMapping(value = "/addResourceToRole", method = RequestMethod.POST)
+    @ApiDesc(name = "添加菜单到角色")
+    @RequestMapping(value = "/addMenuToRole", method = RequestMethod.POST)
     @ResponseBody
-    public Object addResourceToRole(HttpServletRequest request, HttpServletResponse response) {
-        ServletInputStream in = null;
+    public Object addMenuToRole(HttpServletRequest request, HttpServletResponse response) {
         try {
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
-            LogUtils.error(requestMsg.toString());
-            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg);
             long roleId = reqJson.getLongValue("roleId");
             String rIds = reqJson.getString("rIds");
             String[] rIdArr = rIds.split(",");
@@ -257,7 +217,7 @@ public class RoleAction {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtils.error("RoleAction%addResourceToRole", e);
+            LogUtils.error("RoleAction%addMenuToRole", e);
             return ResultUtils.exception();
         }
     }

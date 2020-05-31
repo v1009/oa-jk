@@ -2,6 +2,7 @@ package com.ht.oa.jk.dao;
 
 import com.ht.oa.jk.model.SMenu;
 import com.ht.oa.jk.model.SMenu;
+import com.ht.oa.jk.model.SRoleMenu;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface SMenuMapper extends BaseMapper {
 
     List<SMenu> queryAllMenus();
 
-    List<SMenu> queryMenusByMid(long mid);
+    List<SMenu> queryMenusByMid(long userId);
 
     int updateLeafByMenuId(long resourceId);
 
@@ -33,5 +34,7 @@ public interface SMenuMapper extends BaseMapper {
     int stop(SMenu record);
 
     Integer queryLastChildPriorityByParentId(long parentId);
+
+    List<SMenu> getAllMenuByRoleId(SRoleMenu model);
 
 }

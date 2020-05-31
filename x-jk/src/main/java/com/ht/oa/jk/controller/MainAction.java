@@ -29,23 +29,15 @@ public class MainAction {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     public Object login(HttpServletRequest request) {
-        ServletInputStream in = null;
         try {
             if (LoginCheckUtils.isIntercept(request)) {
                 return ResultUtils.param("访问过于频繁");
             }
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
-            LogUtils.error(requestMsg.toString());
-            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg);
             String username = reqJson.getString("username");
             String password = reqJson.getString("password");
             if (StringUtils.isBlank(username)) {
@@ -80,23 +72,11 @@ public class MainAction {
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     @ResponseBody
     public Object logout(HttpServletRequest request) {
-        ServletInputStream in = null;
         try {
-            if (LoginCheckUtils.isIntercept(request)) {
-                return ResultUtils.param("访问过于频繁");
-            }
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
-                return ResultUtils.param("参数必传");
-            }
-            LogUtils.error(requestMsg.toString());
             String accessToken = RequestUtils.getSessionToken(request);
+            if (StringUtils.isBlank(accessToken)) {
+                return ResultUtils.param("Token expired");
+            }
             MemberCacheUtils.logout(accessToken);
             return ResultUtils.success("已退出");
         } catch (Exception e) {

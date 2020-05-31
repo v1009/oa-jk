@@ -5,12 +5,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.ht.oa.jk.config.ApiDesc;
 import com.ht.oa.jk.controller.security.service.MenuService;
 import com.ht.oa.jk.model.SMenu;
+import com.ht.oa.jk.model.SRoleMenu;
 import com.ht.oa.jk.model.TreeMenu;
 import com.ht.oa.jk.utils.common.DateUtils;
 import com.ht.oa.jk.utils.common.ResultUtils;
 import com.ht.oa.jk.utils.common.StringUtils;
 import com.ht.oa.jk.utils.log.LogUtils;
 import com.ht.oa.jk.utils.seq.IdWorker;
+import com.ht.oa.jk.utils.system.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,20 +36,12 @@ public class MenuAction {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public Object add(HttpServletRequest request) {
-        ServletInputStream in = null;
         try {
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
-            LogUtils.error(requestMsg.toString());
-            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg);
             long parentId = reqJson.getLongValue("parentId");
             String name = reqJson.getString("name");
             String path = reqJson.getString("path");
@@ -83,20 +77,12 @@ public class MenuAction {
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     @ResponseBody
     public Object modify(HttpServletRequest request) {
-        ServletInputStream in = null;
         try {
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
-            LogUtils.error(requestMsg.toString());
-            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg);
             long id = reqJson.getLongValue("id");
             String name = reqJson.getString("name");
             String path = reqJson.getString("path");
@@ -130,28 +116,19 @@ public class MenuAction {
     @RequestMapping(value = "/findUserMenu", method = RequestMethod.POST)
     @ResponseBody
     public Object findUserMenu(HttpServletRequest request) {
-        ServletInputStream in = null;
         try {
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
-            LogUtils.error(requestMsg.toString());
-            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg);
             long userId = reqJson.getLongValue("userId");
-            List<SMenu> list = menuService.getAllResources(userId);
+            List<SMenu> list = menuService.queryAllMenus(userId);
             TreeMenu root = new TreeMenu();
             root.setLeaf(false);
             root.setId(0L);
             root.setLabel("根节点");
             root.setParentId(-1L);
-            root.setDescription("根节点");
             root.setPath("/*");
             root.setPriority(1);
             createTree(root, list);
@@ -163,30 +140,49 @@ public class MenuAction {
         }
     }
 
-    @ApiDesc(name = "查询所有菜单")
-    @RequestMapping(value = "/findAllMenu", method = RequestMethod.POST)
+    @ApiDesc(name = "查询所有菜单通过角色")
+    @RequestMapping(value = "/findAllMenuByRoleId", method = RequestMethod.POST)
     @ResponseBody
-    public Object findAllMenu(HttpServletRequest request) {
-        ServletInputStream in = null;
+    public Object findAllMenuByRoleId(HttpServletRequest request) {
         try {
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
-            LogUtils.error(requestMsg.toString());
-            List<SMenu> list = menuService.getAllResources();
+            JSONObject reqJson = JSON.parseObject(requestMsg);
+            long roleId = reqJson.getLongValue("roleId");
+            long ownerMid = RequestUtils.getSystemOwnerId(request);
+            SRoleMenu sRoleMenu = new SRoleMenu();
+            sRoleMenu.setRoleId(roleId);
+            sRoleMenu.setOwnerMid(ownerMid);
+            List<SMenu> list = menuService.getAllMenuByRoleId(sRoleMenu);
             TreeMenu root = new TreeMenu();
             root.setLeaf(false);
             root.setId(0L);
             root.setLabel("根节点");
             root.setParentId(-1L);
-            root.setDescription("根节点");
+            root.setPath("/*");
+            root.setPriority(1);
+            createTree(root, list);
+            return ResultUtils.model(root.getChildren());
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtils.error("MenuAction%findAllMenuByRoleId", e);
+            return ResultUtils.exception();
+        }
+    }
+
+    @ApiDesc(name = "查询所有菜单")
+    @RequestMapping(value = "/findAllMenu", method = RequestMethod.POST)
+    @ResponseBody
+    public Object findAllMenu(HttpServletRequest request) {
+        try {
+            List<SMenu> list = menuService.queryAllMenus();
+            TreeMenu root = new TreeMenu();
+            root.setLeaf(false);
+            root.setId(0L);
+            root.setLabel("根节点");
+            root.setParentId(-1L);
             root.setPath("/*");
             root.setPriority(1);
             createTree(root, list);
@@ -221,7 +217,6 @@ public class MenuAction {
                 menu.setLabel(item.getMenuName());
                 menu.setPath(item.getMenuPath());
                 menu.setLeaf(item.getLeaf() == 1);
-                menu.setDescription(item.getMenuDesc());
                 menu.setPriority(item.getPriority());
                 menu.setIconCls(item.getIcon());
                 result.add(menu);
@@ -249,7 +244,6 @@ public class MenuAction {
             if (item.getParentId() == nodeId) {
                 TreeMenu menu = new TreeMenu();
                 menu.setId(item.getMenuId());
-                menu.setDescription(item.getMenuDesc());
                 menu.setPath(item.getMenuPath());
                 menu.setLeaf(item.getLeaf() == 1);
                 menu.setLabel(item.getMenuName());
@@ -270,28 +264,19 @@ public class MenuAction {
     @RequestMapping(value = "/findMenuByRole", method = RequestMethod.POST)
     @ResponseBody
     public Object findMenuByRole(HttpServletRequest request) {
-        ServletInputStream in = null;
         try {
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
-            LogUtils.error(requestMsg.toString());
-            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg);
             long roleId = reqJson.getLongValue("roleId");
-            List<SMenu> list = menuService.getResourcesByRoleId(roleId);
+            List<SMenu> list = menuService.getMenuListByRoleId(roleId);
             TreeMenu root = new TreeMenu();
             root.setLeaf(false);
             root.setId(0L);
             root.setLabel("根节点");
             root.setParentId(-1L);
-            root.setDescription("根节点");
             root.setPath("/*");
             root.setPriority(1);
             createTree(root, list);
@@ -307,20 +292,12 @@ public class MenuAction {
     @RequestMapping(value = "/enable", method = RequestMethod.POST)
     @ResponseBody
     public Object enable(HttpServletRequest request) {
-        ServletInputStream in = null;
         try {
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
-            LogUtils.error(requestMsg.toString());
-            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg);
             long id = reqJson.getLongValue("id");
             Date now = DateUtils.getNowDate();
             SMenu sMenu = new SMenu();
@@ -343,20 +320,12 @@ public class MenuAction {
     @RequestMapping(value = "/stop", method = RequestMethod.POST)
     @ResponseBody
     public Object stop(HttpServletRequest request) {
-        ServletInputStream in = null;
         try {
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
-            LogUtils.error(requestMsg.toString());
-            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg);
             long id = reqJson.getLongValue("id");
             Date now = DateUtils.getNowDate();
             SMenu sMenu = new SMenu();

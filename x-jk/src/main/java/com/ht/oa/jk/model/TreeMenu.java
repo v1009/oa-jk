@@ -15,7 +15,6 @@ public class TreeMenu implements Serializable {
     private String label;
     private String iconCls = "sysMenuIcon";
     private String path;
-    private String description;
     private boolean leaf;
     private int priority;
     private boolean checked;
@@ -60,14 +59,6 @@ public class TreeMenu implements Serializable {
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public boolean isLeaf() {

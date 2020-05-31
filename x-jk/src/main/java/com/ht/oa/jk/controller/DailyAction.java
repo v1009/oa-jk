@@ -14,6 +14,7 @@ import com.ht.oa.jk.utils.common.ResultUtils;
 import com.ht.oa.jk.utils.common.StringUtils;
 import com.ht.oa.jk.utils.excel.FileUtils;
 import com.ht.oa.jk.utils.log.LogUtils;
+import com.ht.oa.jk.utils.system.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,20 +42,12 @@ public class DailyAction {
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
     public Object list(HttpServletRequest request, HttpServletResponse response) {
-        ServletInputStream in = null;
         try {
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
-            LogUtils.error(requestMsg.toString());
-            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg);
             Integer page = reqJson.getInteger("page");
             if (page == null) {
                 page = 1;

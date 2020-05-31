@@ -41,20 +41,12 @@ public class UserAction {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public Object add(HttpServletRequest request, HttpServletResponse response) {
-        ServletInputStream in = null;
         try {
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
-            LogUtils.error(requestMsg.toString());
-            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg);
             String mobile = reqJson.getString("mobile");
             String pwd = reqJson.getString("pwd");
             String userName = reqJson.getString("userName");
@@ -91,20 +83,12 @@ public class UserAction {
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
     public Object list(HttpServletRequest request, HttpServletResponse response) {
-        ServletInputStream in = null;
         try {
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
-            LogUtils.error(requestMsg.toString());
-            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg);
             Integer page = reqJson.getInteger("page");
             if (page == null) {
                 page = 1;
@@ -124,20 +108,12 @@ public class UserAction {
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
     @ResponseBody
     public Object modify(HttpServletRequest request, HttpServletResponse response) {
-        ServletInputStream in = null;
         try {
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
-            LogUtils.error(requestMsg.toString());
-            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg);
             long userId = reqJson.getLongValue("userId");
             String userName = reqJson.getString("userName");
             String email = reqJson.getString("email");
@@ -167,20 +143,12 @@ public class UserAction {
     @RequestMapping(value = "/del", method = RequestMethod.POST)
     @ResponseBody
     public Object del(HttpServletRequest request, HttpServletResponse response) {
-        ServletInputStream in = null;
         try {
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
-            LogUtils.error(requestMsg.toString());
-            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg);
             long userId = reqJson.getLongValue("userId");
             Date now = DateUtils.getNowDate();
             SUsers sUsers = new SUsers();
@@ -204,20 +172,12 @@ public class UserAction {
     @RequestMapping(value = "/findModelByUserId", method = RequestMethod.POST)
     @ResponseBody
     public Object findModelByUserId(HttpServletRequest request, HttpServletResponse response) {
-        ServletInputStream in = null;
         try {
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
-            LogUtils.error(requestMsg.toString());
-            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg);
             String accessToken = RequestUtils.getSessionToken(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
             if (cacheMember == null) {
@@ -237,20 +197,12 @@ public class UserAction {
     @RequestMapping(value = "/addRoleToUser", method = RequestMethod.POST)
     @ResponseBody
     public Object addRoleToUser(HttpServletRequest request, HttpServletResponse response) {
-        ServletInputStream in = null;
         try {
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
-            LogUtils.error(requestMsg.toString());
-            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg);
             String accessToken = RequestUtils.getSessionToken(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
             if (cacheMember == null) {
@@ -293,20 +245,12 @@ public class UserAction {
     @RequestMapping(value = "/queryRoleByUser", method = RequestMethod.POST)
     @ResponseBody
     public Object queryRoleByUser(HttpServletRequest request, HttpServletResponse response) {
-        ServletInputStream in = null;
         try {
-            in = request.getInputStream();
-            StringBuilder requestMsg = new StringBuilder();
-            byte[] b = new byte[4096];
-            int l;
-            while ((l = in.read(b)) != -1) {
-                requestMsg.append(new String(b, 0, l, "UTF-8"));
-            }
-            if (StringUtils.isBlank(requestMsg.toString())) {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
-            LogUtils.error(requestMsg.toString());
-            JSONObject reqJson = JSON.parseObject(requestMsg.toString());
+            JSONObject reqJson = JSON.parseObject(requestMsg);
             String accessToken = RequestUtils.getSessionToken(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
             if (cacheMember == null) {
