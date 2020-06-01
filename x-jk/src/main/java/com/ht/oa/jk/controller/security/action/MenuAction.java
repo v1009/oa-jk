@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
@@ -141,7 +140,7 @@ public class MenuAction {
     }
 
     @ApiDesc(name = "查询所有菜单通过角色")
-    @RequestMapping(value = "/findAllMenuByRoleId", method = RequestMethod.POST)
+    @RequestMapping(value = "/findAllMenuByRole", method = RequestMethod.POST)
     @ResponseBody
     public Object findAllMenuByRoleId(HttpServletRequest request) {
         try {
@@ -167,7 +166,7 @@ public class MenuAction {
             return ResultUtils.model(root.getChildren());
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtils.error("MenuAction%findAllMenuByRoleId", e);
+            LogUtils.error("MenuAction%findAllMenuByRole", e);
             return ResultUtils.exception();
         }
     }
@@ -219,6 +218,7 @@ public class MenuAction {
                 menu.setLeaf(item.getLeaf() == 1);
                 menu.setPriority(item.getPriority());
                 menu.setIconCls(item.getIcon());
+                menu.setChecked(item.getStatus() > 0);
                 result.add(menu);
             }
         }

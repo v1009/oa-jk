@@ -2,12 +2,79 @@
   "code": 200,
   "data": [
     {
+      "id": "651561924172972032",
+      "parentId": "0",
+      "label": "控制台",
+      "iconCls": null,
+      "path": null,
+      "leaf": true,
+      "priority": 5,
+      "checked": false,
+      "children": null
+    },
+    {
+      "id": "712072913980887040",
+      "parentId": "0",
+      "label": "日报管理",
+      "iconCls": null,
+      "path": null,
+      "leaf": false,
+      "priority": 6,
+      "checked": false,
+      "children": [
+        {
+          "id": "712073535287332864",
+          "parentId": "712072913980887040",
+          "label": "日报列表",
+          "iconCls": null,
+          "path": null,
+          "leaf": true,
+          "priority": 1,
+          "checked": false,
+          "children": null
+        }
+      ]
+    },
+    {
+      "id": "710617843766530048",
+      "parentId": "0",
+      "label": "测试菜单",
+      "iconCls": null,
+      "path": null,
+      "leaf": false,
+      "priority": 6,
+      "checked": false,
+      "children": [
+        {
+          "id": "710904249059512320",
+          "parentId": "710617843766530048",
+          "label": "1",
+          "iconCls": null,
+          "path": null,
+          "leaf": true,
+          "priority": 1,
+          "checked": false,
+          "children": null
+        },
+        {
+          "id": "711578497067388928",
+          "parentId": "710617843766530048",
+          "label": "测试5",
+          "iconCls": null,
+          "path": null,
+          "leaf": true,
+          "priority": 2,
+          "checked": false,
+          "children": null
+        }
+      ]
+    },
+    {
       "id": "2",
       "parentId": "0",
       "label": "权限管理",
       "iconCls": null,
       "path": null,
-      "description": "权限管理",
       "leaf": false,
       "priority": 10,
       "checked": false,
@@ -18,10 +85,9 @@
           "label": "团队成员",
           "iconCls": null,
           "path": null,
-          "description": "团队成员",
           "leaf": true,
           "priority": 1,
-          "checked": false,
+          "checked": true,
           "children": null
         },
         {
@@ -30,10 +96,9 @@
           "label": "成员角色",
           "iconCls": null,
           "path": null,
-          "description": "成员角色",
           "leaf": true,
           "priority": 2,
-          "checked": false,
+          "checked": true,
           "children": null
         },
         {
@@ -42,7 +107,6 @@
           "label": "菜单管理",
           "iconCls": null,
           "path": null,
-          "description": "菜单管理",
           "leaf": true,
           "priority": 4,
           "checked": false,
@@ -56,7 +120,6 @@
       "label": "开发",
       "iconCls": null,
       "path": null,
-      "description": "开发",
       "leaf": false,
       "priority": 50,
       "checked": false,
@@ -67,83 +130,8 @@
           "label": "基础信息",
           "iconCls": null,
           "path": null,
-          "description": "基础信息",
           "leaf": true,
           "priority": 10,
-          "checked": false,
-          "children": null
-        }
-      ]
-    },
-    {
-      "id": "651561924172972032",
-      "parentId": "0",
-      "label": "控制台",
-      "iconCls": null,
-      "path": null,
-      "description": "控制台",
-      "leaf": true,
-      "priority": 5,
-      "checked": false,
-      "children": null
-    },
-    {
-      "id": "710617843766530048",
-      "parentId": "0",
-      "label": "测试菜单",
-      "iconCls": null,
-      "path": null,
-      "description": "测试菜单2",
-      "leaf": false,
-      "priority": 6,
-      "checked": false,
-      "children": [
-        {
-          "id": "710904249059512320",
-          "parentId": "710617843766530048",
-          "label": "1",
-          "iconCls": null,
-          "path": null,
-          "description": null,
-          "leaf": true,
-          "priority": 1,
-          "checked": false,
-          "children": null
-        },
-        {
-          "id": "711578497067388928",
-          "parentId": "710617843766530048",
-          "label": "测试5",
-          "iconCls": null,
-          "path": null,
-          "description": null,
-          "leaf": true,
-          "priority": 2,
-          "checked": false,
-          "children": null
-        }
-      ]
-    },
-    {
-      "id": "712072913980887040",
-      "parentId": "0",
-      "label": "日报管理",
-      "iconCls": null,
-      "path": null,
-      "description": null,
-      "leaf": false,
-      "priority": 6,
-      "checked": false,
-      "children": [
-        {
-          "id": "712073535287332864",
-          "parentId": "712072913980887040",
-          "label": "日报列表",
-          "iconCls": null,
-          "path": null,
-          "description": null,
-          "leaf": true,
-          "priority": 1,
           "checked": false,
           "children": null
         }
