@@ -1,6 +1,6 @@
 package com.ht.oa.jk.controller.security.service;
 
-import com.ht.oa.jk.model.SRoleResources;
+import com.ht.oa.jk.model.SRoleMenu;
 import com.ht.oa.jk.model.SRoles;
 import com.ht.oa.jk.model.req.SRolesReq;
 
@@ -59,10 +59,10 @@ public interface RoleService {
     /**
      * 给角色赋资源
      *
-     * @param sRoleResourceList
+     * @param sRoleMenuList
      * @return
      */
-    boolean addResourceToRole(List<SRoleResources> sRoleResourceList);
+    boolean addMenusToRole(List<SRoleMenu> sRoleMenuList);
 
     /**
      * 查询角色

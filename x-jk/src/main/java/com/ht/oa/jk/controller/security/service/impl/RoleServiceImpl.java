@@ -1,9 +1,9 @@
 package com.ht.oa.jk.controller.security.service.impl;
 
 import com.ht.oa.jk.controller.security.service.RoleService;
-import com.ht.oa.jk.dao.SRoleResourcesMapper;
+import com.ht.oa.jk.dao.SRoleMenuMapper;
 import com.ht.oa.jk.dao.SRolesMapper;
-import com.ht.oa.jk.model.SRoleResources;
+import com.ht.oa.jk.model.SRoleMenu;
 import com.ht.oa.jk.model.SRoles;
 import com.ht.oa.jk.model.req.SRolesReq;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     private SRolesMapper sRolesMapper;
     @Autowired
-    private SRoleResourcesMapper sRoleResourcesMapper;
+    private SRoleMenuMapper sRoleMenuMapper;
 
     @Override
     public boolean add(SRoles sRoles) {
@@ -69,17 +69,17 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
-    public boolean addResourceToRole(List<SRoleResources> sRoleResourceList) {
-        long roleId = sRoleResourceList.get(0).getRoleId();
-        long ownerMid = sRoleResourceList.get(0).getOwnerMid();
+    public boolean addMenusToRole(List<SRoleMenu> sRoleMenuList) {
+        long roleId = sRoleMenuList.get(0).getRoleId();
+        long ownerMid = sRoleMenuList.get(0).getOwnerMid();
 
-        SRoleResources sRoleResource = new SRoleResources();
-        sRoleResource.setRoleId(roleId);
-        sRoleResource.setOwnerMid(ownerMid);
-        int res = sRoleResourcesMapper.delRecordByRoleId(sRoleResource);
-        res = sRoleResourcesMapper.batchInsert(sRoleResourceList);
+        SRoleMenu sRoleMenu = new SRoleMenu();
+        sRoleMenu.setRoleId(roleId);
+        sRoleMenu.setOwnerMid(ownerMid);
+        int res = sRoleMenuMapper.delRecordByRoleId(sRoleMenu);
+        res = sRoleMenuMapper.batchInsert(sRoleMenuList);
         if (res < 1) {
-            throw new RuntimeException("addResourceToRole:批量插入失败");
+            throw new RuntimeException("addMenuToRole:批量插入失败");
         }
         return true;
     }

@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ht.oa.jk.config.ApiDesc;
 import com.ht.oa.jk.controller.security.service.RoleService;
-import com.ht.oa.jk.model.SRoleResources;
+import com.ht.oa.jk.model.SRoleMenu;
 import com.ht.oa.jk.model.SRoles;
 import com.ht.oa.jk.model.req.SRolesReq;
 import com.ht.oa.jk.utils.cache.CacheMember;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -188,28 +187,29 @@ public class RoleAction {
             }
             JSONObject reqJson = JSON.parseObject(requestMsg);
             long roleId = reqJson.getLongValue("roleId");
-            String rIds = reqJson.getString("rIds");
-            String[] rIdArr = rIds.split(",");
-            long[] rIdList = new long[rIdArr.length];
-            for (int i = 0; i < rIdArr.length; i++) {
-                rIdList[i] = Long.parseLong(rIdArr[i]);
+            String menuIds = reqJson.getString("menuIds");
+            String[] menuIdArr = menuIds.split(",");
+            long[] menuIdList = new long[menuIdArr.length];
+            for (int i = 0; i < menuIdArr.length; i++) {
+                menuIdList[i] = Long.parseLong(menuIdArr[i]);
             }
             String sessionToken = RequestUtils.getSessionToken(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(sessionToken);
             long mid = cacheMember.getMid();
             long ownerMid = RequestUtils.getSystemOwnerId(request);
-            List<SRoleResources> sRoleResourceList = new ArrayList<>();
+            List<SRoleMenu> sRoleResourceList = new ArrayList<>();
             Date now = DateUtils.getNowDate();
-            for (long resourceId : rIdList) {
-                SRoleResources sRoleResource = new SRoleResources();
-                sRoleResource.setResourceId(resourceId);
-                sRoleResource.setRoleId(roleId);
-                sRoleResource.setInsertTime(now);
-                sRoleResource.setAddMid(mid);
-                sRoleResource.setOwnerMid(ownerMid);
-                sRoleResourceList.add(sRoleResource);
+            for (long menuId : menuIdList) {
+                SRoleMenu sRoleMenu = new SRoleMenu();
+                sRoleMenu.setId(IdWorker.nextId());
+                sRoleMenu.setMenuId(menuId);
+                sRoleMenu.setRoleId(roleId);
+                sRoleMenu.setInsertTime(now);
+                sRoleMenu.setAddMid(mid);
+                sRoleMenu.setOwnerMid(ownerMid);
+                sRoleResourceList.add(sRoleMenu);
             }
-            boolean boo = roleService.addResourceToRole(sRoleResourceList);
+            boolean boo = roleService.addMenusToRole(sRoleResourceList);
             if (boo) {
                 return ResultUtils.success("成功");
             } else {
