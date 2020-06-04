@@ -161,4 +161,25 @@ public class MenuActionTests {
         System.out.println(responseContent);
     }
 
+    /**
+     * 获取当前登录用户的菜单
+     *
+     * @throws Exception
+     */
+    @Test
+    public void findMenu() throws Exception {
+        JSONObject params = new JSONObject();
+
+        MvcResult mvcResult = mockMvc.perform(
+                MockMvcRequestBuilders.post("/menu/findMenu")
+                        .header("Token", TokenUtils.Token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JSON.toJSONString(params)))
+                .andReturn();
+
+        String responseContent = mvcResult.getResponse().getContentAsString();
+        responseContent = new String(responseContent.getBytes("ISO-8859-1"), "UTF-8");
+        System.out.println(responseContent);
+    }
+
 }

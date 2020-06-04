@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,7 +72,7 @@ public class MainAction {
     @ResponseBody
     public Object logout(HttpServletRequest request) {
         try {
-            String accessToken = RequestUtils.getSessionToken(request);
+            String accessToken = RequestUtils.getCookieToken(request);
             if (StringUtils.isBlank(accessToken)) {
                 return ResultUtils.param("Token expired");
             }

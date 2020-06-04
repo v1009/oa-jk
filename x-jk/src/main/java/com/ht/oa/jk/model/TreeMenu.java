@@ -13,10 +13,9 @@ public class TreeMenu implements Serializable {
     @JsonSerialize(using = ToStringSerializer.class)
     private Long parentId;
     private String label;
-    private String iconCls = "sysMenuIcon";
+    private String icon = "sysMenuIcon";
     private String path;
     private boolean leaf;
-    private int priority;
     private boolean checked;
 
     private List<TreeMenu> children;
@@ -45,12 +44,12 @@ public class TreeMenu implements Serializable {
         this.label = label;
     }
 
-    public String getIconCls() {
-        return iconCls;
+    public String getIcon() {
+        return icon;
     }
 
-    public void setIconCls(String iconCls) {
-        this.iconCls = iconCls;
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public String getPath() {
@@ -67,14 +66,6 @@ public class TreeMenu implements Serializable {
 
     public void setLeaf(boolean leaf) {
         this.leaf = leaf;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
     }
 
     public boolean isChecked() {

@@ -1,16 +1,9 @@
 package com.ht.oa.jk.utils.system;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.ht.oa.jk.model.SMenu;
-import com.ht.oa.jk.model.TreeMenu;
-import com.ht.oa.jk.utils.common.ResultUtils;
-import com.ht.oa.jk.utils.common.StringUtils;
 import com.ht.oa.jk.utils.log.LogUtils;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 public class RequestUtils {
 
@@ -30,7 +23,7 @@ public class RequestUtils {
      * @param request
      * @return
      */
-    public static String getSessionToken(HttpServletRequest request) {
+    public static String getCookieToken(HttpServletRequest request) {
         return request.getHeader("Token");
     }
 

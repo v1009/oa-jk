@@ -72,7 +72,7 @@ public class RoleAction {
                 return ResultUtils.param("参数必传");
             }
             JSONObject reqJson = JSON.parseObject(requestMsg);
-            String accessToken = RequestUtils.getSessionToken(request);
+            String accessToken = RequestUtils.getCookieToken(request);
             long ownerMid = RequestUtils.getSystemOwnerId(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
             long mid = cacheMember.getMid();
@@ -110,7 +110,7 @@ public class RoleAction {
                 return ResultUtils.param("参数必传");
             }
             JSONObject reqJson = JSON.parseObject(requestMsg);
-            String accessToken = RequestUtils.getSessionToken(request);
+            String accessToken = RequestUtils.getCookieToken(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
             long mid = cacheMember.getMid();
             long roleId = reqJson.getLongValue("roleId");
@@ -149,7 +149,7 @@ public class RoleAction {
                 return ResultUtils.param("参数必传");
             }
             JSONObject reqJson = JSON.parseObject(requestMsg);
-            String accessToken = RequestUtils.getSessionToken(request);
+            String accessToken = RequestUtils.getCookieToken(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
             long mid = cacheMember.getMid();
             long roleId = reqJson.getLongValue("roleId");
@@ -193,7 +193,7 @@ public class RoleAction {
             for (int i = 0; i < menuIdArr.length; i++) {
                 menuIdList[i] = Long.parseLong(menuIdArr[i]);
             }
-            String sessionToken = RequestUtils.getSessionToken(request);
+            String sessionToken = RequestUtils.getCookieToken(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(sessionToken);
             long mid = cacheMember.getMid();
             long ownerMid = RequestUtils.getSystemOwnerId(request);

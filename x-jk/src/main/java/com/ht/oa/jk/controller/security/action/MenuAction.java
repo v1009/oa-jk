@@ -7,6 +7,8 @@ import com.ht.oa.jk.controller.security.service.MenuService;
 import com.ht.oa.jk.model.SMenu;
 import com.ht.oa.jk.model.SRoleMenu;
 import com.ht.oa.jk.model.TreeMenu;
+import com.ht.oa.jk.utils.cache.CacheMember;
+import com.ht.oa.jk.utils.cache.MemberCacheUtils;
 import com.ht.oa.jk.utils.common.DateUtils;
 import com.ht.oa.jk.utils.common.ResultUtils;
 import com.ht.oa.jk.utils.common.StringUtils;
@@ -129,7 +131,6 @@ public class MenuAction {
             root.setLabel("根节点");
             root.setParentId(-1L);
             root.setPath("/*");
-            root.setPriority(1);
             createTree(root, list);
             return ResultUtils.model(root.getChildren());
         } catch (Exception e) {
@@ -140,7 +141,7 @@ public class MenuAction {
     }
 
     @ApiDesc(name = "查询所有菜单通过角色")
-    @RequestMapping(value = "/findAllMenuByRole", method = RequestMethod.POST)
+    @RequestMapping(value = "/findAllMenuByRoleId", method = RequestMethod.POST)
     @ResponseBody
     public Object findAllMenuByRoleId(HttpServletRequest request) {
         try {
@@ -161,12 +162,11 @@ public class MenuAction {
             root.setLabel("根节点");
             root.setParentId(-1L);
             root.setPath("/*");
-            root.setPriority(1);
             createTree(root, list);
             return ResultUtils.model(root.getChildren());
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtils.error("MenuAction%findAllMenuByRole", e);
+            LogUtils.error("MenuAction%findAllMenuByRoleId", e);
             return ResultUtils.exception();
         }
     }
@@ -183,7 +183,6 @@ public class MenuAction {
             root.setLabel("根节点");
             root.setParentId(-1L);
             root.setPath("/*");
-            root.setPriority(1);
             createTree(root, list);
             return ResultUtils.model(root.getChildren());
         } catch (Exception e) {
@@ -216,9 +215,7 @@ public class MenuAction {
                 menu.setLabel(item.getMenuName());
                 menu.setPath(item.getMenuPath());
                 menu.setLeaf(item.getLeaf() == 1);
-                menu.setPriority(item.getPriority());
-                menu.setIconCls(item.getIcon());
-                menu.setChecked(item.getStatus() > 0);
+                menu.setIcon(item.getIcon());
                 result.add(menu);
             }
         }
@@ -248,7 +245,6 @@ public class MenuAction {
                 menu.setLeaf(item.getLeaf() == 1);
                 menu.setLabel(item.getMenuName());
                 menu.setParentId(item.getParentId());
-                menu.setPriority(item.getPriority());
                 for (SMenu checkItem : checkList) {
                     if (checkItem.getMenuId().intValue() == item.getMenuId().intValue()) {
                         menu.setChecked(true);
@@ -278,7 +274,6 @@ public class MenuAction {
             root.setLabel("根节点");
             root.setParentId(-1L);
             root.setPath("/*");
-            root.setPriority(1);
             createTree(root, list);
             return ResultUtils.model(root);
         } catch (Exception e) {
@@ -340,6 +335,41 @@ public class MenuAction {
         } catch (Exception e) {
             e.printStackTrace();
             LogUtils.error("MenuAction%stop", e);
+            return ResultUtils.exception();
+        }
+    }
+
+    /**
+     * 获取当前登录用户的菜单
+     */
+    @ApiDesc(name = "获取当前登录用户的菜单")
+    @RequestMapping(value = "/findMenu", method = RequestMethod.POST)
+    @ResponseBody
+    public Object getMenuList(HttpServletRequest request) {
+        try {
+            String requestMsg = RequestUtils.getRequestBody(request);
+            if (StringUtils.isBlank(requestMsg)) {
+                return ResultUtils.param("参数必传");
+            }
+            CacheMember cacheMember = MemberCacheUtils.getCacheMember(request);
+            long mid = cacheMember.getMid();
+            List<SMenu> list = null;
+            if (mid == 0) {
+                list = menuService.queryAllMenus();
+            } else {
+                list = menuService.queryAllMenus(mid);
+            }
+            TreeMenu root = new TreeMenu();
+            root.setLeaf(false);
+            root.setId(0L);
+            root.setLabel("根节点");
+            root.setParentId(-1L);
+            root.setPath("/*");
+            createTree(root, list);
+            return ResultUtils.model(root.getChildren());
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtils.error("MenuAction%findMenu", e);
             return ResultUtils.exception();
         }
     }

@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -178,7 +177,7 @@ public class UserAction {
                 return ResultUtils.param("参数必传");
             }
             JSONObject reqJson = JSON.parseObject(requestMsg);
-            String accessToken = RequestUtils.getSessionToken(request);
+            String accessToken = RequestUtils.getCookieToken(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
             if (cacheMember == null) {
                 return ResultUtils.login();
@@ -203,7 +202,7 @@ public class UserAction {
                 return ResultUtils.param("参数必传");
             }
             JSONObject reqJson = JSON.parseObject(requestMsg);
-            String accessToken = RequestUtils.getSessionToken(request);
+            String accessToken = RequestUtils.getCookieToken(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
             if (cacheMember == null) {
                 return ResultUtils.login();
@@ -251,7 +250,7 @@ public class UserAction {
                 return ResultUtils.param("参数必传");
             }
             JSONObject reqJson = JSON.parseObject(requestMsg);
-            String accessToken = RequestUtils.getSessionToken(request);
+            String accessToken = RequestUtils.getCookieToken(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
             if (cacheMember == null) {
                 return ResultUtils.login();

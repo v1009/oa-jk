@@ -1,6 +1,9 @@
 package com.ht.oa.jk.utils.cache;
 
 import com.alibaba.fastjson.JSON;
+import com.ht.oa.jk.utils.system.RequestUtils;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class MemberCacheUtils {
 
@@ -9,6 +12,17 @@ public class MemberCacheUtils {
      */
     public static void login(String accessToken, CacheMember cacheMember) {
         RedisCacheFactory.setString(accessToken, 3600 * 24 * 30, JSON.toJSONString(cacheMember));
+    }
+
+    /**
+     * 获取缓存用户
+     */
+    public static CacheMember getCacheMember(HttpServletRequest request) {
+        String member = RedisCacheFactory.getString(RequestUtils.getCookieToken(request));
+        if (member == null) {
+            return null;
+        }
+        return JSON.parseObject(member, CacheMember.class);
     }
 
     /**

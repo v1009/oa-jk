@@ -58,7 +58,7 @@ public class AuthFilter implements Filter {
             return;
         }
         //判断会话访问token
-        String sessionToken = RequestUtils.getSessionToken(request);
+        String sessionToken = RequestUtils.getCookieToken(request);
         if (StringUtils.isBlank(sessionToken)) {
             response.setContentType("application/json;charset=utf-8");
             CommonResponseSimple commonResponse = ResultUtils.param("Token required");
