@@ -2,6 +2,8 @@ package com.ht.oa.jk.controller.security.service;
 
 import com.ht.oa.jk.model.SMenu;
 import com.ht.oa.jk.model.SRoleMenu;
+import com.ht.oa.jk.model.req.SRolesReq;
+import com.ht.oa.jk.model.req.SUserRoleReq;
 
 import java.util.List;
 
@@ -10,10 +12,9 @@ public interface MenuService {
     /**
      * 查询用户的菜单列表
      *
-     * @param userId
      * @return
      */
-    List<SMenu> queryAllMenus(long userId);
+    List<SMenu> queryAllMenus(SUserRoleReq sUserRoleReq);
 
     /**
      * 查询所有菜单
@@ -41,10 +42,9 @@ public interface MenuService {
     /**
      * 查询资源通过角色id
      *
-     * @param roleId
      * @return
      */
-    List<SMenu> getMenuListByRoleId(long roleId);
+    List<SMenu> getMenuListByRole(SRolesReq sRolesReq);
 
     /**
      * 启动菜单

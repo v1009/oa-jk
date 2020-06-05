@@ -76,28 +76,6 @@ public class MenuActionTests {
     }
 
     /**
-     * 查询指定用户的菜单
-     *
-     * @throws Exception
-     */
-    @Test
-    public void findUserMenu() throws Exception {
-        JSONObject params = new JSONObject();
-        params.put("page", 1);
-
-        MvcResult mvcResult = mockMvc.perform(
-                MockMvcRequestBuilders.post("/menu/findUserMenu")
-                        .header("Token", TokenUtils.Token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(JSON.toJSONString(params)))
-                .andReturn();
-
-        String responseContent = mvcResult.getResponse().getContentAsString();
-        responseContent = new String(responseContent.getBytes("ISO-8859-1"), "UTF-8");
-        System.out.println(responseContent);
-    }
-
-    /**
      * 查询所有菜单通过角色
      *
      * @throws Exception

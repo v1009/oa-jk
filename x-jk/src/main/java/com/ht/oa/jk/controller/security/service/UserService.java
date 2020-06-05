@@ -64,4 +64,11 @@ public interface UserService {
      */
     Map<String, Object> queryModelByUserId(long userId);
 
+    /**
+     * 查询用户通过手机号码
+     *
+     * @param userPhone
+     * @return
+     */
+    Map<String, Object> queryModelByUserPhone(String userPhone);
 }

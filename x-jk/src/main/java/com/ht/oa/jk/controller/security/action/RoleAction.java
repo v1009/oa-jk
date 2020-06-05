@@ -50,9 +50,12 @@ public class RoleAction {
             if (page == null) {
                 page = 1;
             }
+            //获取访问系统信息
+            long ownerMid = RequestUtils.getSystemOwnerId(request);
             SRolesReq sRolesReq = new SRolesReq();
             sRolesReq.setPage(page);
             sRolesReq.setRoleName(roleName);
+            sRolesReq.setOwnerMid(ownerMid);
             List<Map<String, Object>> list = roleService.list(sRolesReq);
             return ResultUtils.list(list);
         } catch (Exception e) {
@@ -111,6 +114,7 @@ public class RoleAction {
             }
             JSONObject reqJson = JSON.parseObject(requestMsg);
             String accessToken = RequestUtils.getCookieToken(request);
+            long ownerMid = RequestUtils.getSystemOwnerId(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
             long mid = cacheMember.getMid();
             long roleId = reqJson.getLongValue("roleId");
@@ -122,6 +126,7 @@ public class RoleAction {
             sRoles.setLastTime(now);
             sRoles.setStatus(1);
             sRoles.setUpdateMid(mid);
+            sRoles.setOwnerMid(ownerMid);
             //检查角色名称是否被使用
             if (roleService.checkRoleNameIsExist(sRoles)) {
                 return ResultUtils.param("该角色名称已经被使用,请输入其他名称");
@@ -150,6 +155,7 @@ public class RoleAction {
             }
             JSONObject reqJson = JSON.parseObject(requestMsg);
             String accessToken = RequestUtils.getCookieToken(request);
+            long ownerMid = RequestUtils.getSystemOwnerId(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(accessToken);
             long mid = cacheMember.getMid();
             long roleId = reqJson.getLongValue("roleId");
@@ -163,6 +169,7 @@ public class RoleAction {
             sRoles.setLastTime(now);
             sRoles.setStatus(1);
             sRoles.setUpdateMid(mid);
+            sRoles.setOwnerMid(ownerMid);
             boolean boo = roleService.del(sRoles);
             if (boo) {
                 return ResultUtils.success("删除成功");

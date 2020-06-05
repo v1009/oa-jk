@@ -1,8 +1,9 @@
 package com.ht.oa.jk.dao;
 
 import com.ht.oa.jk.model.SMenu;
-import com.ht.oa.jk.model.SMenu;
 import com.ht.oa.jk.model.SRoleMenu;
+import com.ht.oa.jk.model.req.SRolesReq;
+import com.ht.oa.jk.model.req.SUserRoleReq;
 
 import java.util.List;
 
@@ -21,13 +22,13 @@ public interface SMenuMapper extends BaseMapper {
 
     List<SMenu> queryAllMenus();
 
-    List<SMenu> queryMenusByMid(long userId);
+    List<SMenu> queryMenusByMid(SUserRoleReq sUserRoleReq);
 
     int updateLeafByMenuId(long resourceId);
 
     int modify(SMenu model);
 
-    List<SMenu> queryMenusByRoleId(long roleId);
+    List<SMenu> queryMenusByRoleId(SRolesReq sRolesReq);
 
     int enable(SMenu record);
 

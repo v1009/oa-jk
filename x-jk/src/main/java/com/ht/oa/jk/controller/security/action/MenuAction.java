@@ -6,7 +6,10 @@ import com.ht.oa.jk.config.ApiDesc;
 import com.ht.oa.jk.controller.security.service.MenuService;
 import com.ht.oa.jk.model.SMenu;
 import com.ht.oa.jk.model.SRoleMenu;
+import com.ht.oa.jk.model.SRoles;
 import com.ht.oa.jk.model.TreeMenu;
+import com.ht.oa.jk.model.req.SRolesReq;
+import com.ht.oa.jk.model.req.SUserRoleReq;
 import com.ht.oa.jk.utils.cache.CacheMember;
 import com.ht.oa.jk.utils.cache.MemberCacheUtils;
 import com.ht.oa.jk.utils.common.DateUtils;
@@ -113,37 +116,10 @@ public class MenuAction {
         }
     }
 
-    @ApiDesc(name = "查询指定用户的菜单")
-    @RequestMapping(value = "/findUserMenu", method = RequestMethod.POST)
-    @ResponseBody
-    public Object findUserMenu(HttpServletRequest request) {
-        try {
-            String requestMsg = RequestUtils.getRequestBody(request);
-            if (StringUtils.isBlank(requestMsg)) {
-                return ResultUtils.param("参数必传");
-            }
-            JSONObject reqJson = JSON.parseObject(requestMsg);
-            long userId = reqJson.getLongValue("userId");
-            List<SMenu> list = menuService.queryAllMenus(userId);
-            TreeMenu root = new TreeMenu();
-            root.setLeaf(false);
-            root.setId(0L);
-            root.setLabel("根节点");
-            root.setParentId(-1L);
-            root.setPath("/*");
-            createTree(root, list);
-            return ResultUtils.model(root.getChildren());
-        } catch (Exception e) {
-            e.printStackTrace();
-            LogUtils.error("MenuAction%findUserMenu", e);
-            return ResultUtils.exception();
-        }
-    }
-
     @ApiDesc(name = "查询所有菜单通过角色")
-    @RequestMapping(value = "/findAllMenuByRoleId", method = RequestMethod.POST)
+    @RequestMapping(value = "/findAllMenuByRole", method = RequestMethod.POST)
     @ResponseBody
-    public Object findAllMenuByRoleId(HttpServletRequest request) {
+    public Object findAllMenuByRole(HttpServletRequest request) {
         try {
             String requestMsg = RequestUtils.getRequestBody(request);
             if (StringUtils.isBlank(requestMsg)) {
@@ -166,7 +142,7 @@ public class MenuAction {
             return ResultUtils.model(root.getChildren());
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtils.error("MenuAction%findAllMenuByRoleId", e);
+            LogUtils.error("MenuAction%findAllMenuByRole", e);
             return ResultUtils.exception();
         }
     }
@@ -216,40 +192,7 @@ public class MenuAction {
                 menu.setPath(item.getMenuPath());
                 menu.setLeaf(item.getLeaf() == 1);
                 menu.setIcon(item.getIcon());
-                result.add(menu);
-            }
-        }
-        return result;
-    }
-
-    void createCheckTree(TreeMenu root, List<SMenu> totalList, List<SMenu> checkList) {
-        //如果不是叶子节点
-        if (!root.isLeaf()) {
-            List<TreeMenu> children = listCheckTreeChildren(root.getId(), totalList, checkList);
-            if (children != null && children.size() > 0) {
-                root.setChildren(children);
-                for (TreeMenu item : children) {
-                    createCheckTree(item, totalList, checkList);
-                }
-            }
-        }
-    }
-
-    List<TreeMenu> listCheckTreeChildren(long nodeId, List<SMenu> totalList, List<SMenu> checkList) {
-        List<TreeMenu> result = new ArrayList<TreeMenu>();
-        for (SMenu item : totalList) {
-            if (item.getParentId() == nodeId) {
-                TreeMenu menu = new TreeMenu();
-                menu.setId(item.getMenuId());
-                menu.setPath(item.getMenuPath());
-                menu.setLeaf(item.getLeaf() == 1);
-                menu.setLabel(item.getMenuName());
-                menu.setParentId(item.getParentId());
-                for (SMenu checkItem : checkList) {
-                    if (checkItem.getMenuId().intValue() == item.getMenuId().intValue()) {
-                        menu.setChecked(true);
-                    }
-                }
+                menu.setChecked(item.getStatus() > 0);
                 result.add(menu);
             }
         }
@@ -265,9 +208,13 @@ public class MenuAction {
             if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
+            long ownerMid = RequestUtils.getSystemOwnerId(request);
             JSONObject reqJson = JSON.parseObject(requestMsg);
             long roleId = reqJson.getLongValue("roleId");
-            List<SMenu> list = menuService.getMenuListByRoleId(roleId);
+            SRolesReq sRolesReq = new SRolesReq();
+            sRolesReq.setRoleId(roleId);
+            sRolesReq.setOwnerMid(ownerMid);
+            List<SMenu> list = menuService.getMenuListByRole(sRolesReq);
             TreeMenu root = new TreeMenu();
             root.setLeaf(false);
             root.setId(0L);
@@ -351,13 +298,17 @@ public class MenuAction {
             if (StringUtils.isBlank(requestMsg)) {
                 return ResultUtils.param("参数必传");
             }
+            long ownerMid = RequestUtils.getSystemOwnerId(request);
             CacheMember cacheMember = MemberCacheUtils.getCacheMember(request);
             long mid = cacheMember.getMid();
             List<SMenu> list = null;
             if (mid == 0) {
                 list = menuService.queryAllMenus();
             } else {
-                list = menuService.queryAllMenus(mid);
+                SUserRoleReq sUserRoleReq = new SUserRoleReq();
+                sUserRoleReq.setUserId(mid);
+                sUserRoleReq.setOwnerMid(ownerMid);
+                list = menuService.queryAllMenus(sUserRoleReq);
             }
             TreeMenu root = new TreeMenu();
             root.setLeaf(false);

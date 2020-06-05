@@ -2,9 +2,10 @@ package com.ht.oa.jk.controller.security.service.impl;
 
 import com.ht.oa.jk.controller.security.service.MenuService;
 import com.ht.oa.jk.dao.SMenuMapper;
-import com.ht.oa.jk.dao.SMenuMapper;
 import com.ht.oa.jk.model.SMenu;
 import com.ht.oa.jk.model.SRoleMenu;
+import com.ht.oa.jk.model.req.SRolesReq;
+import com.ht.oa.jk.model.req.SUserRoleReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +18,8 @@ public class MenuServiceImpl implements MenuService {
     private SMenuMapper sMenuMapper;
 
     @Override
-    public List<SMenu> queryAllMenus(long userId) {
-        return sMenuMapper.queryMenusByMid(userId);
+    public List<SMenu> queryAllMenus(SUserRoleReq sUserRoleReq) {
+        return sMenuMapper.queryMenusByMid(sUserRoleReq);
     }
 
     @Override
@@ -57,8 +58,8 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public List<SMenu> getMenuListByRoleId(long roleId) {
-        return sMenuMapper.queryMenusByRoleId(roleId);
+    public List<SMenu> getMenuListByRole(SRolesReq sRolesReq) {
+        return sMenuMapper.queryMenusByRoleId(sRolesReq);
     }
 
     @Override

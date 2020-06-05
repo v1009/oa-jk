@@ -52,7 +52,7 @@ public class UserAction {
             String email = reqJson.getString("email");
             String address = reqJson.getString("address");
             int salt = (int) (Math.random() * 10000) + 1;
-            String secretUserPwd = PwdUtils.getSecretPwd(pwd, salt);
+            String secretUserPwd = PwdUtils.getSecretPwd(pwd, String.valueOf(salt));
             Date now = DateUtils.getNowDate();
             SUsers sUsers = new SUsers();
             sUsers.setUserId(IdWorker.nextId());

@@ -3,15 +3,18 @@ package com.ht.oa.jk.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ht.oa.jk.config.ApiDesc;
+import com.ht.oa.jk.controller.security.service.UserService;
 import com.ht.oa.jk.utils.auth.LoginCheckUtils;
 import com.ht.oa.jk.utils.cache.CacheMember;
 import com.ht.oa.jk.utils.cache.MemberCacheUtils;
 import com.ht.oa.jk.utils.code.ResultCode;
 import com.ht.oa.jk.utils.common.ResultUtils;
 import com.ht.oa.jk.utils.common.StringUtils;
+import com.ht.oa.jk.utils.crypto.PwdUtils;
 import com.ht.oa.jk.utils.log.LogUtils;
 import com.ht.oa.jk.utils.system.RequestUtils;
 import com.ht.oa.jk.utils.token.TokenUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,6 +26,9 @@ import java.util.Map;
 
 @Controller
 public class MainAction {
+
+    @Autowired
+    private UserService userService;
 
     @ApiDesc(name = "登录")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -37,15 +43,15 @@ public class MainAction {
                 return ResultUtils.param("参数必传");
             }
             JSONObject reqJson = JSON.parseObject(requestMsg);
-            String username = reqJson.getString("username");
+            String userPhone = reqJson.getString("username");
             String password = reqJson.getString("password");
-            if (StringUtils.isBlank(username)) {
+            if (StringUtils.isBlank(userPhone)) {
                 return ResultUtils.param("用户名不能为空");
             }
             if (StringUtils.isBlank(password)) {
                 return ResultUtils.param("密码不能为空");
             }
-            if ("13157184276".equals(username) && "cvc#dc09".equals(password)) {
+            if ("13157184276".equals(userPhone) && "cvc#dc09".equals(password)) {
                 String accessToken = TokenUtils.getAccessToken();
                 Map<String, Object> result = new HashMap<>();
                 result.put("code", ResultCode.success.code());
@@ -56,10 +62,31 @@ public class MainAction {
                 cacheMember.setNickName("glc");
                 MemberCacheUtils.login(accessToken, cacheMember);
                 return result;
-            } else {
+            }
+            Map<String, Object> user = userService.queryModelByUserPhone(userPhone);
+            if (user == null) {
                 LoginCheckUtils.addLoginErrorCount(request);
                 return ResultUtils.param("用户名或密码错误");
             }
+            String userPwd = user.get("userPwd").toString();
+            String salt = user.get("salt").toString();
+            String secretPwd = PwdUtils.getSecretPwd(password, salt);
+            if (!secretPwd.equals(userPwd)) {
+                LoginCheckUtils.addLoginErrorCount(request);
+                return ResultUtils.param("用户名或密码错误");
+            }
+            String accessToken = TokenUtils.getAccessToken();
+            long userId = Long.parseLong(user.get("userId").toString());
+            String userName = user.get("userName").toString();
+            Map<String, Object> result = new HashMap<>();
+            result.put("code", ResultCode.success.code());
+            result.put("accessToken", accessToken);
+            CacheMember cacheMember = new CacheMember();
+            cacheMember.setMid(userId);
+            cacheMember.setMobile(userPhone);
+            cacheMember.setNickName(userName);
+            MemberCacheUtils.login(accessToken, cacheMember);
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
             LogUtils.error("MainAction%login", e);

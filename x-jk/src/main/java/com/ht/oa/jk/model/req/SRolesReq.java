@@ -3,14 +3,13 @@ package com.ht.oa.jk.model.req;
 import com.ht.oa.jk.model.BaseModel;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class SRolesReq extends BaseModel implements Serializable {
     private Long roleId;
 
     private String roleName;
 
-    private Integer status;
+    private Long ownerMid;
 
     public Long getRoleId() {
         return roleId;
@@ -28,11 +27,11 @@ public class SRolesReq extends BaseModel implements Serializable {
         this.roleName = roleName == null ? null : roleName.trim();
     }
 
-    public Integer getStatus() {
-        return status;
+    public Long getOwnerMid() {
+        return ownerMid;
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setOwnerMid(Long ownerMid) {
+        this.ownerMid = ownerMid;
     }
 }

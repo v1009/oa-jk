@@ -179,13 +179,12 @@
       select * from s_menu where status=1 order by priority
   </select>
   <!-- 根据用户查询所有的资源-->
-  <select id="queryMenusByMid" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="queryMenusByMid" parameterType="com.ht.oa.jk.model.req.SUserRoleReq" resultMap="BaseResultMap">
       select * from s_menu where menu_id in (
           select menu_id from s_role_menu where role_id in (
-             select role_id from s_user_role where user_id=#{userId}
+             select role_id from s_user_role where user_id=#{userId} and owner_mid = #{ownerMid,jdbcType=BIGINT} and status=1
           )
-      )
-      and status=1
+      ) and status=1
       order by priority
   </select>
   <!-- 更新 -->
@@ -227,9 +226,9 @@
     where menu_id = #{menuId,jdbcType=BIGINT} and status=1
   </update>
   <!-- 根据角色查询所有菜单 -->
-  <select id="queryMenusByRoleId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="queryMenusByRoleId" parameterType="com.ht.oa.jk.model.req.SRolesReq" resultMap="BaseResultMap">
       select * from s_menu where menu_id in (
-          select menu_id from s_role_menu where role_id=#{roleId}
+          select menu_id from s_role_menu where role_id=#{roleId} and owner_mid = #{ownerMid,jdbcType=BIGINT}
       )
       and status=1
       order by priority

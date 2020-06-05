@@ -16,7 +16,7 @@ public class LoginCheckUtils {
         if (count == null) {
             return false;
         }
-        if (Integer.parseInt(count) > 15) {
+        if (Integer.parseInt(count) > 30) {
             return true;
         }
         return false;

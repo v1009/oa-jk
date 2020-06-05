@@ -267,5 +267,18 @@
     from s_users
     where user_id = #{userId,jdbcType=BIGINT} and status=1
   </select>
+  <!-- 查询用户通过userPhone -->
+  <select id="queryModelByUserPhone" parameterType="java.lang.String" resultType="java.util.Map">
+    select
+    user_id as userId,
+    user_name as userName,
+    user_phone as userPhone,
+    user_email as userEmail,
+    address as address,
+    user_pwd as userPwd,
+    salt as salt
+    from s_users
+    where user_phone = #{userPhone,jdbcType=VARCHAR} and status=1
+  </select>
 
 </mapper>

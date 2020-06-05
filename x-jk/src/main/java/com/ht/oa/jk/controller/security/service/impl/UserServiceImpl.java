@@ -81,4 +81,9 @@ public class UserServiceImpl implements UserService {
         return sUsersMapper.findModelByUserId(userId);
     }
 
+    @Override
+    public Map<String, Object> queryModelByUserPhone(String userPhone) {
+        return sUsersMapper.queryModelByUserPhone(userPhone);
+    }
+
 }

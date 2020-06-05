@@ -2,7 +2,6 @@ package com.ht.oa.jk.dao;
 
 import com.ht.oa.jk.model.SUsers;
 import com.ht.oa.jk.model.req.SUsersReq;
-import com.ht.oa.jk.model.resp.UserResp;
 
 import java.util.List;
 import java.util.Map;
@@ -28,4 +27,6 @@ public interface SUsersMapper extends BaseMapper {
 
     Map<String,Object> findModelByUserId(long userId);
 
+    Map<String,Object> queryModelByUserPhone(String userPhone);
+    
 }
