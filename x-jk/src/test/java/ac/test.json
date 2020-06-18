@@ -2,32 +2,73 @@
   "code": 200,
   "data": [
     {
-      "id": "710617843766530048",
+      "id": "651561924172972032",
       "parentId": "0",
-      "label": "测试菜单",
-      "icon": "1.jpg",
-      "path": "#TestMenu",
+      "label": "控制台",
+      "icon": null,
+      "path": null,
+      "leaf": true,
+      "checked": false,
+      "children": null
+    },
+    {
+      "id": "2",
+      "parentId": "0",
+      "label": "权限管理",
+      "icon": null,
+      "path": null,
       "leaf": false,
       "checked": true,
       "children": [
         {
-          "id": "710904249059512320",
-          "parentId": "710617843766530048",
-          "label": "1",
-          "icon": "1",
-          "path": "1",
+          "id": "3",
+          "parentId": "2",
+          "label": "成员管理",
+          "icon": null,
+          "path": null,
           "leaf": true,
           "checked": true,
           "children": null
         },
         {
-          "id": "711578497067388928",
-          "parentId": "710617843766530048",
-          "label": "测试5",
-          "icon": "143",
-          "path": "#1232",
+          "id": "4",
+          "parentId": "2",
+          "label": "角色管理",
+          "icon": null,
+          "path": null,
           "leaf": true,
-          "checked": true,
+          "checked": false,
+          "children": null
+        },
+        {
+          "id": "6",
+          "parentId": "2",
+          "label": "菜单管理",
+          "icon": null,
+          "path": null,
+          "leaf": true,
+          "checked": false,
+          "children": null
+        }
+      ]
+    },
+    {
+      "id": "712072913980887040",
+      "parentId": "0",
+      "label": "日报管理",
+      "icon": null,
+      "path": null,
+      "leaf": false,
+      "checked": false,
+      "children": [
+        {
+          "id": "712073535287332864",
+          "parentId": "712072913980887040",
+          "label": "日报列表",
+          "icon": null,
+          "path": null,
+          "leaf": true,
+          "checked": false,
           "children": null
         }
       ]

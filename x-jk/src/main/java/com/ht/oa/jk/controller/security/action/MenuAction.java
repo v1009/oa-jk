@@ -6,7 +6,6 @@ import com.ht.oa.jk.config.ApiDesc;
 import com.ht.oa.jk.controller.security.service.MenuService;
 import com.ht.oa.jk.model.SMenu;
 import com.ht.oa.jk.model.SRoleMenu;
-import com.ht.oa.jk.model.SRoles;
 import com.ht.oa.jk.model.TreeMenu;
 import com.ht.oa.jk.model.req.SRolesReq;
 import com.ht.oa.jk.model.req.SUserRoleReq;

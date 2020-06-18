@@ -176,7 +176,9 @@
   </update>
   <!-- 根据所有资源 -->
   <select id="queryAllMenus" resultMap="BaseResultMap">
-      select * from s_menu where status=1 order by priority
+      select * from s_menu
+      where status=1
+      order by priority,menu_id
   </select>
   <!-- 根据用户查询所有的资源-->
   <select id="queryMenusByMid" parameterType="com.ht.oa.jk.model.req.SUserRoleReq" resultMap="BaseResultMap">
